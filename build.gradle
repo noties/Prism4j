@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion '4.8'
+    distributionType 'all'
+}
+
+ext {
+    final def supportVersion = '27.1.1'
+    SUPPORT_ANNOTATIONS = "com.android.support:support-annotations:$supportVersion"
+}
