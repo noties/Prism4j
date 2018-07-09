@@ -118,7 +118,7 @@ public abstract class Grammars {
                 token("boolean", pattern(compile("\\b(?:true|false)\\b"))),
                 token(
                         "function",
-                        pattern(compile("a-z0-9_]+(?=\\()", Pattern.CASE_INSENSITIVE))
+                        pattern(compile("[a-z0-9_]+(?=\\()", Pattern.CASE_INSENSITIVE))
                 ),
                 token(
                         "number",

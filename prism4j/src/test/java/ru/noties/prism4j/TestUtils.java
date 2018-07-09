@@ -95,7 +95,8 @@ public abstract class TestUtils {
             if (node instanceof Prism4j.Text) {
                 final String literal = ((Prism4j.Text) node).literal();
                 if (literal.trim().length() != 0) {
-                    array.add(literal.replaceAll("\n", "\r\n"));
+//                    array.add(literal.replaceAll("\n", "\r\n"));
+                    array.add(literal);
                 }
             } else {
                 final Prism4j.Syntax syntax = (Prism4j.Syntax) node;
