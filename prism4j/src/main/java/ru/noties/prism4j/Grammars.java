@@ -113,7 +113,7 @@ public abstract class Grammars {
                 ),
                 token(
                         "keyword",
-                        pattern(compile("\\b(?:if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue|class)\\b"))
+                        pattern(compile("\\b(?:if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\\b"))
                 ),
                 token("boolean", pattern(compile("\\b(?:true|false)\\b"))),
                 token(
