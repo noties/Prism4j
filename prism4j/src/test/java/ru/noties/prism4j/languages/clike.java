@@ -1,4 +1,4 @@
-package ru.noties.prism4j;
+package ru.noties.prism4j.languages;
 
 import android.support.annotation.NonNull;
 
@@ -8,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Collection;
+
+import ru.noties.prism4j.Grammars;
+import ru.noties.prism4j.Prism4j;
+import ru.noties.prism4j.TestUtils;
 
 @RunWith(Parameterized.class)
 public class clike {
