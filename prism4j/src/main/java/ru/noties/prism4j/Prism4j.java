@@ -158,13 +158,11 @@ public class Prism4j {
         final Visitor visitor = new AbsVisitor() {
             @Override
             protected void visitText(@NonNull Text text) {
-                System.out.printf("text: `%s`%n", text.literal());
                 builder.append(text.literal());
             }
 
             @Override
             protected void visitSyntax(@NonNull Syntax syntax) {
-                System.out.printf("syntax: %s, matched: %s%n", syntax.type(), syntax.matchedString());
                 builder
                         .append('{')
                         .append(syntax.type())
@@ -182,8 +180,6 @@ public class Prism4j {
         final long start = System.currentTimeMillis();
 
         final List<Node> nodes = prism4j.tokenize(content, grammar);
-        visitor.visit(nodes);
-
 
 //        prism4j.process(content, Grammars.markup(), new AbsVisitor() {
 //            @Override
@@ -209,9 +205,11 @@ public class Prism4j {
 
         final long end = System.currentTimeMillis();
 
+        visitor.visit(nodes);
+
         System.out.println(builder.toString());
 
-        for (Node node: nodes) {
+        for (Node node : nodes) {
             System.out.println(node.toString());
         }
 
@@ -231,10 +229,10 @@ public class Prism4j {
     }
 
     // set of predefined grammars (instance specific)
-    @NonNull
-    public Grammar clike() {
-        return null;
-    }
+//    @NonNull
+//    public Grammar clike() {
+//        return null;
+//    }
 
     private void matchGrammar(
             @NonNull String text,
@@ -375,7 +373,8 @@ public class Prism4j {
                             greedy
                     ));
 
-                    if (to != str.length() - 1) {
+                    // important thing here (famous off-by one error) to check against full length (not `length - 1`)
+                    if (to < str.length()) {
                         final String after = str.substring(to);
                         entries.add(i2, new TextImpl(after));
                     }
