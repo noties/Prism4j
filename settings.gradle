@@ -1,1 +1,2 @@
-include ':prism4j-parser'
+rootProject.name = 'Prism4jProject'
+include ':prism4j'
