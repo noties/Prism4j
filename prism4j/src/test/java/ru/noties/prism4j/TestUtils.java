@@ -16,6 +16,7 @@ import java.util.List;
 
 import ix.Ix;
 import ix.IxFunction;
+import ix.IxPredicate;
 
 public abstract class TestUtils {
 
@@ -31,6 +32,12 @@ public abstract class TestUtils {
         try (InputStream in = TestUtils.class.getClassLoader().getResourceAsStream(folder)) {
             //noinspection unchecked
             return (Collection) Ix.from(IOUtils.readLines(in, StandardCharsets.UTF_8))
+                    .filter(new IxPredicate<String>() {
+                        @Override
+                        public boolean test(String s) {
+                            return s.endsWith(".test");
+                        }
+                    })
                     .map(new IxFunction<String, String>() {
                         @Override
                         public String apply(String s) {
@@ -95,7 +102,6 @@ public abstract class TestUtils {
             if (node instanceof Prism4j.Text) {
                 final String literal = ((Prism4j.Text) node).literal();
                 if (literal.trim().length() != 0) {
-//                    array.add(literal.replaceAll("\n", "\r\n"));
                     array.add(literal);
                 }
             } else {
