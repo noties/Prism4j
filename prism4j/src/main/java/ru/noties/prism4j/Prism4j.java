@@ -76,6 +76,16 @@ public class Prism4j {
         String matchedString();
 
         boolean greedy();
+
+        /**
+         * The main aim for this flag is to be able to properly construct simplified
+         * array of tokens during tests. If it\'s set to true, then children will be
+         * inside another array. Otherwise they will be _flattened_ into the same array
+         * as token type information
+         *
+         * @return a flag indicating if children of this node were tokenized
+         */
+        boolean tokenized();
     }
 
     public interface Visitor {
@@ -362,7 +372,8 @@ public class Prism4j {
 
                     final List<? extends Node> tokenEntries;
                     final Grammar inside = pattern.inside();
-                    if (inside != null) {
+                    final boolean hasInside = inside != null;
+                    if (hasInside) {
                         tokenEntries = tokenize(match, inside);
                     } else {
                         tokenEntries = Collections.singletonList(new TextImpl(match));
@@ -373,7 +384,8 @@ public class Prism4j {
                             tokenEntries,
                             pattern.alias(),
                             match,
-                            greedy
+                            greedy,
+                            hasInside
                     ));
 
                     // important thing here (famous off-by one error) to check against full length (not `length - 1`)

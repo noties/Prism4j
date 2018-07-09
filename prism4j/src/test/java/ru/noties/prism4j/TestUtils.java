@@ -84,9 +84,6 @@ public abstract class TestUtils {
     }
 
     public static void assertCase(@NonNull Case c, @NonNull List<? extends Prism4j.Node> nodes) {
-        if (c.description.contains("class names")) {
-            throw new RuntimeException(nodes.toString());
-        }
         Assert.assertEquals(c.description, c.simplifiedOutput.toString(), simplify(nodes).toString());
     }
 
@@ -104,7 +101,11 @@ public abstract class TestUtils {
                 final Prism4j.Syntax syntax = (Prism4j.Syntax) node;
                 final JsonArray inner = new JsonArray();
                 inner.add(syntax.type());
-                inner.addAll(simplify(syntax.children()));
+                if (syntax.tokenized()) {
+                    inner.add(simplify(syntax.children()));
+                } else {
+                    inner.addAll(simplify(syntax.children()));
+                }
                 array.add(inner);
             }
         }
