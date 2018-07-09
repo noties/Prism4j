@@ -1,7 +1,13 @@
 apply plugin: 'java-library'
 
 dependencies {
+
     api SUPPORT_ANNOTATIONS
+
+    testImplementation TEST_JUNIT
+    testImplementation TEST_COMMONS_IO
+    testImplementation TEST_GSON
+    testImplementation TEST_IX_JAVA
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7

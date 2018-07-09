@@ -22,6 +22,12 @@ task wrapper(type: Wrapper) {
 }
 
 ext {
+
     final def supportVersion = '27.1.1'
     SUPPORT_ANNOTATIONS = "com.android.support:support-annotations:$supportVersion"
+
+    TEST_JUNIT = 'junit:junit:4.12'
+    TEST_COMMONS_IO = 'commons-io:commons-io:2.6'
+    TEST_GSON = 'com.google.code.gson:gson:2.8.5'
+    TEST_IX_JAVA = 'com.github.akarnokd:ixjava:1.0.0'
 }

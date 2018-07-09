@@ -258,6 +258,9 @@ public class Prism4j {
 
                 final java.util.regex.Pattern regex = pattern.regex();
 
+                // NB originally (prismjs) here was a check if a pattern is multiline if pattern is greedy
+                // this check has been moved out of here to configuration step (factory `pattern` methods)
+
                 // Don't cache textLength as it changes during the loop
                 for (int i = index, position = startPosition; i < entries.size(); position += entries.get(i).textLength(), ++i) {
 
