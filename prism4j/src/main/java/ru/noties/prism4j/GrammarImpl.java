@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-class GrammarImpl implements Prism4j.Grammar {
+public class GrammarImpl implements Prism4j.Grammar {
 
     private final String name;
     private final List<Prism4j.Token> tokens;
 
-    GrammarImpl(@NonNull String name, @NonNull List<Prism4j.Token> tokens) {
+    public GrammarImpl(@NonNull String name, @NonNull List<Prism4j.Token> tokens) {
         this.name = name;
         this.tokens = tokens;
     }

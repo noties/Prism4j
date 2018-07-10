@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-class TokenImpl implements Prism4j.Token {
+public class TokenImpl implements Prism4j.Token {
 
     private final String name;
     private final List<Prism4j.Pattern> patterns;
 
-    TokenImpl(String name, List<Prism4j.Pattern> patterns) {
+    public TokenImpl(@NonNull String name, @NonNull List<Prism4j.Pattern> patterns) {
         this.name = name;
         this.patterns = patterns;
     }

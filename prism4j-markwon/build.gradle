@@ -1,0 +1,49 @@
+ext {
+    MIN_SDK = 16
+    TARGET_SDK = 27
+    BUILD_TOOLS = '27.0.3'
+
+    MARKWON = 'ru.noties:markwon:1.0.6'
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion TARGET_SDK
+    buildToolsVersion BUILD_TOOLS
+
+    defaultConfig {
+        minSdkVersion MIN_SDK
+        targetSdkVersion TARGET_SDK
+        versionCode 1
+        versionName version
+    }
+}
+
+dependencies {
+    api project(':prism4j')
+    api SUPPORT_ANNOTATIONS
+    api MARKWON
+}
+
+if (project.hasProperty('release')) {
+    if (project.hasProperty('local')) {
+        ext.RELEASE_REPOSITORY_URL = LOCAL_MAVEN_URL
+    }
+    apply from: 'https://raw.githubusercontent.com/noties/gradle-mvn-push/master/gradle-mvn-push-aar.gradle'
+}
+
+afterEvaluate {
+    generateReleaseBuildConfig.enabled = false
+}

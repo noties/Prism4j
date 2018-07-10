@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 import static java.util.regex.Pattern.compile;
@@ -149,81 +151,30 @@ public class Prism4j {
         return new PatternImpl(ensureMultilineIfGreedy(regex, greedy), lookbehind, greedy, alias, inside);
     }
 
-    public static void main(String[] args) throws Throwable {
+    @NonNull
+    public static Grammar extend(@NonNull Grammar grammar, @NonNull String name, @NonNull List<Token> tokens) {
+        return new GrammarImpl(name, GrammarUtils.extend(grammar.tokens(), tokens));
+    }
 
-        final String content = "<!doctype html>\n" +
-                "whatever\n" +
-                "\"at the top\"\n\n" +
-                "/* this is\n" +
-                "with multiple lines\n" +
-                "<div class='my-div-class'><span>inside a span</span></div>\n" +
-                " comment */\n" +
-                "//newline\n" +
-                "<a href=\"https://some.where\" v-bind:click=\"onclick()\">hey-hey-ho!</a>\n" +
-                "class Hel.lo \"another string\" { private int time = 0xff * 15; if (true) { throw new \"strings are thrown!\"; }";
+    @NonNull
+    public static Grammar extend(@NonNull Grammar grammar, @NonNull String name, Token... tokens) {
+        return new GrammarImpl(name, GrammarUtils.extend(grammar.tokens(), ArrayUtils.toList(tokens)));
+    }
 
-        final Prism4j prism4j = new Prism4j();
-        final StringBuilder builder = new StringBuilder();
+    private final GrammarLocator grammarLocator;
+    private final Map<String, Grammar> grammarCache = new HashMap<>(3);
 
-        final Visitor visitor = new AbsVisitor() {
-            @Override
-            protected void visitText(@NonNull Text text) {
-                builder.append(text.literal());
-            }
+    public Prism4j() {
+        this(new GrammarLocatorDef());
+    }
 
-            @Override
-            protected void visitSyntax(@NonNull Syntax syntax) {
-                builder
-                        .append('{')
-                        .append(syntax.type())
-                        .append('}');
-                visit(syntax.children());
-                builder
-                        .append("{/")
-                        .append(syntax.type())
-                        .append('}');
-            }
-        };
+    public Prism4j(@NonNull GrammarLocator grammarLocator) {
+        this.grammarLocator = grammarLocator;
+    }
 
-        final Grammar grammar = Grammars.markup();
-
-        final long start = System.currentTimeMillis();
-
-        final List<Node> nodes = prism4j.tokenize(content, grammar);
-
-//        prism4j.process(content, Grammars.markup(), new AbsVisitor() {
-//            @Override
-//            protected void visitText(@NonNull Text text) {
-//                System.out.printf("text: `%s`%n", text.literal());
-//                builder.append(text.literal());
-//            }
-//
-//            @Override
-//            protected void visitSyntax(@NonNull Syntax syntax) {
-//                System.out.printf("syntax: %s, matched: %s%n", syntax.type(), syntax.matchedString());
-//                builder
-//                        .append('{')
-//                        .append(syntax.type())
-//                        .append('}');
-//                visit(syntax.children());
-//                builder
-//                        .append("{/")
-//                        .append(syntax.type())
-//                        .append('}');
-//            }
-//        });
-
-        final long end = System.currentTimeMillis();
-
-        visitor.visit(nodes);
-
-        System.out.println(builder.toString());
-
-        for (Node node : nodes) {
-            System.out.println(node.toString());
-        }
-
-        System.out.printf("took: %d ms", end - start);
+    @NonNull
+    public GrammarLocator grammarLocator() {
+        return grammarLocator;
     }
 
     @NonNull
@@ -234,15 +185,23 @@ public class Prism4j {
         return entries;
     }
 
-    public void process(@NonNull String text, @NonNull Grammar grammar, @NonNull Visitor visitor) {
-        visitor.visit(tokenize(text, grammar));
+    @Nullable
+    public Grammar grammar(@NonNull String name) {
+        name = grammarLocator.grammarName(name);
+        Grammar grammar = grammarCache.get(name);
+        if (grammar == null) {
+            grammar = grammarLocator.grammar(this, name);
+            if (grammar != null) {
+                grammarCache.put(name, grammar);
+            }
+        }
+        return grammar;
     }
 
-    // set of predefined grammars (instance specific)
-//    @NonNull
-//    public Grammar clike() {
-//        return null;
-//    }
+    public void language(@NonNull Grammar grammar) {
+        grammarCache.put(grammar.name(), grammar);
+    }
+
 
     private void matchGrammar(
             @NonNull String text,
@@ -404,7 +363,6 @@ public class Prism4j {
                 }
             }
         }
-
     }
 
     // we are using `multiline` definition here, but originally prism is using word `global`

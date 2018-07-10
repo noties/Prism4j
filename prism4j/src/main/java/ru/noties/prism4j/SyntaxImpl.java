@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-class SyntaxImpl implements Prism4j.Syntax {
+public class SyntaxImpl implements Prism4j.Syntax {
 
     private final String type;
     private final List<? extends Prism4j.Node> children;
@@ -14,7 +14,7 @@ class SyntaxImpl implements Prism4j.Syntax {
     private final boolean greedy;
     private final boolean tokenized;
 
-    SyntaxImpl(
+    public SyntaxImpl(
             @NonNull String type,
             @NonNull List<? extends Prism4j.Node> children,
             @Nullable String alias,
