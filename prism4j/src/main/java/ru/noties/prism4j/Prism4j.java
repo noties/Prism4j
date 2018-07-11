@@ -158,20 +158,10 @@ public class Prism4j {
     }
 
     private final GrammarLocator grammarLocator;
-//    private final Map<String, Grammar> grammarCache = new HashMap<>(3);
-
-//    public Prism4j() {
-//        this(new GrammarLocatorDef());
-//    }
 
     public Prism4j(@NonNull GrammarLocator grammarLocator) {
         this.grammarLocator = grammarLocator;
     }
-
-//    @NonNull
-//    public GrammarLocator grammarLocator() {
-//        return grammarLocator;
-//    }
 
     @NonNull
     public List<Node> tokenize(@NonNull String text, @NonNull Grammar grammar) {
@@ -185,10 +175,6 @@ public class Prism4j {
     public Grammar grammar(@NonNull String name) {
         return grammarLocator.grammar(this, name);
     }
-//
-//    public void language(@NonNull Grammar grammar) {
-//        grammarCache.put(grammar.name(), grammar);
-//    }
 
     private void matchGrammar(
             @NonNull String text,
@@ -351,16 +337,6 @@ public class Prism4j {
             }
         }
     }
-
-//    // we are using `multiline` definition here, but originally prism is using word `global`
-//    @NonNull
-//    private static java.util.regex.Pattern ensureMultilineIfGreedy(java.util.regex.Pattern pattern, boolean greedy) {
-//        if (greedy
-//                && !(java.util.regex.Pattern.MULTILINE == (java.util.regex.Pattern.MULTILINE & pattern.flags()))) {
-//            return compile(pattern.pattern(), java.util.regex.Pattern.MULTILINE | pattern.flags());
-//        }
-//        return pattern;
-//    }
 
     private static boolean isSyntaxNode(@NonNull Node node) {
         return node instanceof Syntax;
