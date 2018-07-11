@@ -5,12 +5,8 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
-
-import static java.util.regex.Pattern.compile;
 
 public class Prism4j {
 
@@ -129,7 +125,7 @@ public class Prism4j {
             @NonNull java.util.regex.Pattern regex,
             boolean lookbehind,
             boolean greedy) {
-        return new PatternImpl(ensureMultilineIfGreedy(regex, greedy), lookbehind, greedy, null, null);
+        return new PatternImpl(regex, lookbehind, greedy, null, null);
     }
 
     @NonNull
@@ -138,7 +134,7 @@ public class Prism4j {
             boolean lookbehind,
             boolean greedy,
             @Nullable String alias) {
-        return new PatternImpl(ensureMultilineIfGreedy(regex, greedy), lookbehind, greedy, alias, null);
+        return new PatternImpl(regex, lookbehind, greedy, alias, null);
     }
 
     @NonNull
@@ -148,7 +144,7 @@ public class Prism4j {
             boolean greedy,
             @Nullable String alias,
             @Nullable Grammar inside) {
-        return new PatternImpl(ensureMultilineIfGreedy(regex, greedy), lookbehind, greedy, alias, inside);
+        return new PatternImpl(regex, lookbehind, greedy, alias, inside);
     }
 
     @NonNull
@@ -162,20 +158,20 @@ public class Prism4j {
     }
 
     private final GrammarLocator grammarLocator;
-    private final Map<String, Grammar> grammarCache = new HashMap<>(3);
+//    private final Map<String, Grammar> grammarCache = new HashMap<>(3);
 
-    public Prism4j() {
-        this(new GrammarLocatorDef());
-    }
+//    public Prism4j() {
+//        this(new GrammarLocatorDef());
+//    }
 
     public Prism4j(@NonNull GrammarLocator grammarLocator) {
         this.grammarLocator = grammarLocator;
     }
 
-    @NonNull
-    public GrammarLocator grammarLocator() {
-        return grammarLocator;
-    }
+//    @NonNull
+//    public GrammarLocator grammarLocator() {
+//        return grammarLocator;
+//    }
 
     @NonNull
     public List<Node> tokenize(@NonNull String text, @NonNull Grammar grammar) {
@@ -187,21 +183,12 @@ public class Prism4j {
 
     @Nullable
     public Grammar grammar(@NonNull String name) {
-        name = grammarLocator.grammarName(name);
-        Grammar grammar = grammarCache.get(name);
-        if (grammar == null) {
-            grammar = grammarLocator.grammar(this, name);
-            if (grammar != null) {
-                grammarCache.put(name, grammar);
-            }
-        }
-        return grammar;
+        return grammarLocator.grammar(this, name);
     }
-
-    public void language(@NonNull Grammar grammar) {
-        grammarCache.put(grammar.name(), grammar);
-    }
-
+//
+//    public void language(@NonNull Grammar grammar) {
+//        grammarCache.put(grammar.name(), grammar);
+//    }
 
     private void matchGrammar(
             @NonNull String text,
@@ -365,15 +352,15 @@ public class Prism4j {
         }
     }
 
-    // we are using `multiline` definition here, but originally prism is using word `global`
-    @NonNull
-    private static java.util.regex.Pattern ensureMultilineIfGreedy(java.util.regex.Pattern pattern, boolean greedy) {
-        if (greedy
-                && !(java.util.regex.Pattern.MULTILINE == (java.util.regex.Pattern.MULTILINE & pattern.flags()))) {
-            return compile(pattern.pattern(), java.util.regex.Pattern.MULTILINE | pattern.flags());
-        }
-        return pattern;
-    }
+//    // we are using `multiline` definition here, but originally prism is using word `global`
+//    @NonNull
+//    private static java.util.regex.Pattern ensureMultilineIfGreedy(java.util.regex.Pattern pattern, boolean greedy) {
+//        if (greedy
+//                && !(java.util.regex.Pattern.MULTILINE == (java.util.regex.Pattern.MULTILINE & pattern.flags()))) {
+//            return compile(pattern.pattern(), java.util.regex.Pattern.MULTILINE | pattern.flags());
+//        }
+//        return pattern;
+//    }
 
     private static boolean isSyntaxNode(@NonNull Node node) {
         return node instanceof Syntax;

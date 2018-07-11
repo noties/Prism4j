@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.util.regex.Pattern;
 
 import ru.noties.prism4j.Prism4j;
+import ru.noties.prism4j.annotations.Aliases;
 
 import static java.util.regex.Pattern.compile;
 import static ru.noties.prism4j.Prism4j.grammar;
@@ -12,6 +13,9 @@ import static ru.noties.prism4j.Prism4j.pattern;
 import static ru.noties.prism4j.Prism4j.token;
 
 @SuppressWarnings("unused")
+@Aliases({
+        "xml",
+        "html", "mathml", "svg"})
 public abstract class Prism_markup {
 
     @NonNull

@@ -1,0 +1,12 @@
+apply plugin: 'java-library'
+
+sourceSets {
+    main.java.srcDirs += '../languages'
+}
+
+dependencies {
+    implementation project(':prism4j')
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7

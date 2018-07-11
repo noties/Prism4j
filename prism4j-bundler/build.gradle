@@ -1,0 +1,17 @@
+apply plugin: 'java-library'
+
+sourceSets {
+    main.java.srcDirs += '../annotations'
+}
+
+// todo: find-out why generated source `*.java` files are included
+
+dependencies {
+    implementation SUPPORT_ANNOTATIONS
+    implementation IX_JAVA
+    implementation COMMONS_IO
+    implementation GOOGLE_JAVA_FORMAT
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
