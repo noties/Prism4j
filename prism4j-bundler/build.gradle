@@ -2,6 +2,7 @@ apply plugin: 'java-library'
 
 sourceSets {
     main.java.srcDirs += '../annotations'
+    main.resources.srcDirs += 'src/main/resources'
 }
 
 // todo: find-out why generated source `*.java` files are included

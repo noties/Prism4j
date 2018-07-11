@@ -9,9 +9,9 @@ dependencies {
     api SUPPORT_ANNOTATIONS
     annotationProcessor project(':prism4j-bundler')
 
-    testImplementation TEST_JUNIT
+    testImplementation JUNIT
     testImplementation COMMONS_IO
-    testImplementation TEST_GSON
+    testImplementation GSON
     testImplementation IX_JAVA
 }
 

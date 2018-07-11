@@ -5,7 +5,14 @@ sourceSets {
 }
 
 dependencies {
+
     implementation project(':prism4j')
+
+    testAnnotationProcessor project(':prism4j-bundler')
+    testImplementation JUNIT
+    testImplementation COMMONS_IO
+    testImplementation IX_JAVA
+    testImplementation GSON
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7

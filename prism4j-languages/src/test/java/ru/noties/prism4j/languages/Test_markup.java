@@ -9,35 +9,36 @@ import org.junit.runners.Parameterized;
 
 import java.util.Collection;
 
-import ru.noties.prism4j.Grammars;
 import ru.noties.prism4j.Prism4j;
 import ru.noties.prism4j.TestUtils;
+import ru.noties.prism4j.annotations.PrismBundle;
 
 @RunWith(Parameterized.class)
-public class clike {
+@PrismBundle(include = "markup", name = ".GrammarLocatorMarkup")
+public class Test_markup {
 
     @Parameterized.Parameters(name = "{0}")
     @NonNull
     public static Collection<Object> parameters() {
-        return TestUtils.testFiles("clike");
+        return TestUtils.testFiles("markup");
     }
 
     private Prism4j prism4j;
 
     @Before
     public void before() {
-        prism4j = new Prism4j();
+        prism4j = new Prism4j(new GrammarLocatorMarkup());
     }
 
     private String file;
 
-    public clike(@NonNull String file) {
+    public Test_markup(@NonNull String file) {
         this.file = file;
     }
 
     @Test
     public void test() {
         final TestUtils.Case c = TestUtils.readCase(file);
-        TestUtils.assertCase(c, prism4j.tokenize(c.input, Grammars.clike()));
+        TestUtils.assertCase(c, prism4j.tokenize(c.input, prism4j.grammar("markup")));
     }
 }

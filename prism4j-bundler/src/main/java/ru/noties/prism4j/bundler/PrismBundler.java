@@ -10,6 +10,7 @@ import com.google.googlejavaformat.java.JavaFormatterOptions;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -42,7 +44,7 @@ import static javax.tools.Diagnostic.Kind.NOTE;
 public class PrismBundler extends AbstractProcessor {
 
     private static final String LANGUAGES_PACKAGE = "ru.noties.prism4j.languages";
-    private static final String LANGUAGE_SOURCE_PATTERN = "/languages/ru/noties/prism4j/languages/Prism_%1$s.java";
+    private static final String LANGUAGE_SOURCE_PATTERN = "languages/ru/noties/prism4j/languages/Prism_%1$s.java";
 
     private static final String TEMPLATE_PACKAGE_NAME = "{{package-name}}";
     private static final String TEMPLATE_IMPORTS = "{{imports}}";
@@ -54,9 +56,20 @@ public class PrismBundler extends AbstractProcessor {
     private Elements elements;
     private Filer filer;
 
+    // this override might've killed me... without it processor cannot find ANY resources...
+    @Override
+    public Set<String> getSupportedOptions() {
+        return Collections.emptySet();
+    }
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         return Collections.singleton(PrismBundle.class.getName());
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.RELEASE_7;
     }
 
     @Override
@@ -200,10 +213,18 @@ public class PrismBundler extends AbstractProcessor {
             return;
         }
 
+        if (true) {
+            try (InputStream in = PrismBundle.class.getClassLoader().getResourceAsStream(languageSourceFileName(name))) {
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         // read info
         final String source;
         try {
-            source = IOUtils.resourceToString(languageSourceFileName(name), StandardCharsets.UTF_8);
+            source = IOUtils.resourceToString(languageSourceFileName(name), StandardCharsets.UTF_8, PrismBundler.class.getClassLoader());
         } catch (IOException e) {
             throw new RuntimeException(String.format(Locale.US, "Unable to read language `%1$s` " +
                     "source file. Either it is not defined yet or it was referenced as an alias " +

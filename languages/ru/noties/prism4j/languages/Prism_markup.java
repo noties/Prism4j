@@ -13,9 +13,7 @@ import static ru.noties.prism4j.Prism4j.pattern;
 import static ru.noties.prism4j.Prism4j.token;
 
 @SuppressWarnings("unused")
-@Aliases({
-        "xml",
-        "html", "mathml", "svg"})
+@Aliases({"xml", "html", "mathml", "svg"})
 public abstract class Prism_markup {
 
     @NonNull
