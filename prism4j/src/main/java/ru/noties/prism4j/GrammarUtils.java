@@ -1,13 +1,26 @@
 package ru.noties.prism4j;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-abstract class GrammarUtils {
+public abstract class GrammarUtils {
+
+    @Nullable
+    public static Prism4j.Token findToken(@NonNull Prism4j.Grammar grammar, @NonNull String name) {
+        Prism4j.Token token = null;
+        for (Prism4j.Token t : grammar.tokens()) {
+            if (name.equals(t.name())) {
+                token = t;
+                break;
+            }
+        }
+        return token;
+    }
 
     @NonNull
     static List<Prism4j.Token> extend(
