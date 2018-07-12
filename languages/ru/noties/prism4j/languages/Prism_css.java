@@ -14,6 +14,10 @@ import static ru.noties.prism4j.Prism4j.token;
 @SuppressWarnings("unused")
 public abstract class Prism_css {
 
+    // todo: really important one..
+    // before a language is requested (fro example css)
+    // it won't be initialized (so we won't modify markup to highlight css) before it was requested...
+
     @NonNull
     public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
 
@@ -57,17 +61,94 @@ public abstract class Prism_css {
                 token("punctuation", pattern(compile("[(){};:]")))
         );
 
-        // now we need to put the all tokens from grammar inside `atrule`
-        final Prism4j.Token atrule = GrammarUtils.findToken(grammar, "atrule");
-        final Prism4j.Grammar inside = atrule.patterns().get(0).inside();
+        // can we maybe add some helper to specify simplified location?
 
-        // most likely stackoverflow here
-//        inside.tokens().addAll(grammar.tokens());
-
-        for (Prism4j.Token token: grammar.tokens()) {
-            if (!"atrule".equals(token.name())) {
-                inside.tokens().add(token);
+        // now we need to put the all tokens from grammar inside `atrule` (except the `atrule` of cause)
+        final Prism4j.Token atrule = grammar.tokens().get(1);
+        final Prism4j.Grammar inside = GrammarUtils.findFirstInsideGrammar(atrule);
+        if (inside != null) {
+            for (Prism4j.Token token : grammar.tokens()) {
+                if (!"atrule".equals(token.name())) {
+                    inside.tokens().add(token);
+                }
             }
+        }
+
+        final Prism4j.Grammar markup = prism4j.grammar("markup");
+        if (markup != null) {
+
+            GrammarUtils.insertBeforeToken(
+                    markup,
+                    "tag",
+                    token(
+                            "style",
+                            pattern(
+                                    compile("(<style[\\s\\S]*?>)[\\s\\S]*?(?=<\\/style>)", CASE_INSENSITIVE),
+                                    true,
+                                    true,
+                                    "language-css",
+                                    grammar
+                            )
+                    )
+            );
+
+            // important thing here is to clone found grammar
+            // otherwise we will have stackoverflow (inside tag references style-attr, which
+            // references inside tag, etc)
+            final Prism4j.Grammar markupTagInside;
+            {
+                Prism4j.Grammar _temp = null;
+                final Prism4j.Token token = GrammarUtils.findToken(markup, "tag");
+                if (token != null) {
+                    _temp = GrammarUtils.findFirstInsideGrammar(token);
+                    if (_temp != null) {
+                        _temp = GrammarUtils.clone(_temp);
+                    }
+                }
+                markupTagInside = _temp;
+            }
+
+            GrammarUtils.insertBeforeToken(
+                    markup,
+                    "tag/attr-value",
+                    token(
+                            "style-attr",
+                            pattern(
+                                    compile("\\s*style=(\"|')(?:\\\\[\\s\\S]|(?!\\1)[^\\\\])*\\1", CASE_INSENSITIVE),
+                                    false,
+                                    false,
+                                    "language-css",
+                                    grammar(
+                                            "inside",
+                                            token(
+                                                    "attr-name",
+                                                    pattern(
+                                                            compile("^\\s*style", CASE_INSENSITIVE),
+                                                            false,
+                                                            false,
+                                                            null,
+                                                            markupTagInside
+                                                    )
+                                            ),
+                                            token(
+                                                    "punctuation",
+                                                    pattern(compile("^\\s*=\\s*['\"]|['\"]\\s*$"))
+                                            ),
+                                            token(
+                                                    "attr-value",
+                                                    pattern(
+                                                            compile(".+", CASE_INSENSITIVE),
+                                                            false,
+                                                            false,
+                                                            null,
+                                                            grammar
+                                                    )
+                                            )
+
+                                    )
+                            )
+                    )
+            );
         }
 
         return grammar;
