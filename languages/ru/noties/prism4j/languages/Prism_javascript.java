@@ -85,6 +85,21 @@ public class Prism_javascript {
       )
     );
 
+    final Prism4j.Grammar markup = prism4j.grammar("markup");
+    if (markup != null) {
+      GrammarUtils.insertBeforeToken(markup, "tag",
+        token(
+          "script", pattern(
+            compile("(<script[\\s\\S]*?>)[\\s\\S]*?(?=<\\/script>)", CASE_INSENSITIVE),
+            true,
+            true,
+            "language-javascript",
+            js
+          )
+        )
+      );
+    }
+
     return js;
   }
 
