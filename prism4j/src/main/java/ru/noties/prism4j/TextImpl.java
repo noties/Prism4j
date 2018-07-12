@@ -15,6 +15,11 @@ class TextImpl implements Prism4j.Text {
         return literal.length();
     }
 
+    @Override
+    public final boolean isSyntax() {
+        return false;
+    }
+
     @NonNull
     @Override
     public String literal() {

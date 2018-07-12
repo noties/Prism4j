@@ -45,8 +45,26 @@ public class Prism4j {
         Grammar inside();
     }
 
+    /**
+     * Basic structure that represents parsing state
+     *
+     * @see Text
+     * @see Syntax
+     */
     public interface Node {
+
+        /**
+         * @return raw text length. For {@link Text} node it\'s {@link Text#literal()} length
+         * and for {@link Syntax} it is {@link Syntax#matchedString()} length
+         */
         int textLength();
+
+        /**
+         * As we have only two types maybe doing a lot of `instanceof` checks is not that required
+         *
+         * @return a boolean indicating if this node is an instance of {@link Syntax}
+         */
+        boolean isSyntax();
     }
 
     public interface Text extends Node {
@@ -82,6 +100,9 @@ public class Prism4j {
         boolean tokenized();
     }
 
+    /**
+     * @see AbsVisitor
+     */
     public interface Visitor {
         void visit(@NonNull List<? extends Node> nodes);
     }
@@ -173,6 +194,8 @@ public class Prism4j {
             @Nullable Token target
     ) {
 
+        final int textLength = text.length();
+
         for (Token token : grammar.tokens()) {
 
             if (token == target) {
@@ -193,10 +216,11 @@ public class Prism4j {
                 // Don't cache textLength as it changes during the loop
                 for (int i = index, position = startPosition; i < entries.size(); position += entries.get(i).textLength(), ++i) {
 
-                    // todo: more meaningful thing here
-                    if (entries.size() > text.length()) {
-                        System.out.printf("entries: %s%n", entries);
-                        throw new RuntimeException();
+                    if (entries.size() > textLength) {
+                        throw new RuntimeException("Prism4j internal error. Number of entry nodes " +
+                                "is greater that text length.\n" +
+                                "Nodes: " + entries + "\n" +
+                                "Text: " + text);
                     }
 
                     final Node node = entries.get(i);
@@ -215,7 +239,7 @@ public class Prism4j {
 
                         matcher = regex.matcher(text);
                         // limit search to the position (?)
-                        matcher.region(position, text.length());
+                        matcher.region(position, textLength);
 
                         if (!matcher.find()) {
                             break;
@@ -326,10 +350,10 @@ public class Prism4j {
     }
 
     private static boolean isSyntaxNode(@NonNull Node node) {
-        return node instanceof Syntax;
+        return node.isSyntax();
     }
 
     private static boolean isGreedyNode(@NonNull Node node) {
-        return (node instanceof Syntax) && ((Syntax) node).greedy();
+        return node.isSyntax() && ((Syntax) node).greedy();
     }
 }

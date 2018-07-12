@@ -9,7 +9,7 @@ public abstract class AbsVisitor implements Prism4j.Visitor {
     @Override
     public void visit(@NonNull List<? extends Prism4j.Node> nodes) {
         for (Prism4j.Node node : nodes) {
-            if (node instanceof Prism4j.Syntax) {
+            if (node.isSyntax()) {
                 visitSyntax((Prism4j.Syntax) node);
             } else {
                 visitText((Prism4j.Text) node);
