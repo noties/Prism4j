@@ -153,20 +153,43 @@ public abstract class GrammarUtils {
         );
     }
 
-//    public static int tokenIndex(@NonNull Prism4j.Grammar grammar, @NonNull String name) {
-//
-//        int index = -1;
-//
-//        final List<Prism4j.Token> tokens = grammar.tokens();
-//        for (int i = 0, size = tokens.size(); i < size; i++) {
-//            if (name.equals(tokens.get(i).name())) {
-//                index = i;
-//                break;
-//            }
-//        }
-//
-//        return index;
-//    }
+    @NonNull
+    public static Prism4j.Grammar extend(
+            @NonNull Prism4j.Grammar grammar,
+            @NonNull String name,
+            Prism4j.Token... tokens) {
+
+        // we clone the whole grammar, but override top-most tokens that are passed here
+
+        final int size = tokens != null
+                ? tokens.length
+                : 0;
+
+        if (size == 0) {
+            return new GrammarImpl(name, clone(grammar).tokens());
+        }
+
+        final Map<String, Prism4j.Token> overrides = new HashMap<>(size);
+        for (Prism4j.Token token: tokens) {
+            overrides.put(token.name(), token);
+        }
+
+        final List<Prism4j.Token> origins = grammar.tokens();
+        final List<Prism4j.Token> out = new ArrayList<>(origins.size());
+
+        Prism4j.Token override;
+
+        for (Prism4j.Token origin: origins) {
+            override = overrides.get(origin.name());
+            if (override != null) {
+                out.add(override);
+            } else {
+                out.add(clone(origin));
+            }
+        }
+
+        return new GrammarImpl(name, out);
+    }
 
     @NonNull
     static List<Prism4j.Token> extend(

@@ -6,7 +6,7 @@ import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
 import ru.noties.prism4j.annotations.PrismBundle;
 
-@PrismBundle(include = {"css", "markup"}, name = ".ZZZLocator")
+@PrismBundle(include = {"css", "markup", "javascript"}, name = ".ZZZLocator")
 public class myClass {
 
     public static void main(String[] args) {
