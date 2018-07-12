@@ -4,11 +4,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class GrammarUtils {
+
+    public interface TokenFilter {
+        boolean test(@NonNull Prism4j.Token token);
+    }
 
     @Nullable
     public static Prism4j.Token findToken(@NonNull Prism4j.Grammar grammar, @NonNull String path) {
@@ -180,6 +185,50 @@ public abstract class GrammarUtils {
         Prism4j.Token override;
 
         for (Prism4j.Token origin : origins) {
+            override = overrides.get(origin.name());
+            if (override != null) {
+                out.add(override);
+            } else {
+                out.add(clone(origin));
+            }
+        }
+
+        return new GrammarImpl(name, out);
+    }
+
+    @NonNull
+    public static Prism4j.Grammar extend(
+            @NonNull Prism4j.Grammar grammar,
+            @NonNull String name,
+            @NonNull TokenFilter filter,
+            Prism4j.Token... tokens) {
+
+        final int size = tokens != null
+                ? tokens.length
+                : 0;
+
+        final Map<String, Prism4j.Token> overrides;
+        if (size == 0) {
+            overrides = Collections.emptyMap();
+        } else {
+            overrides = new HashMap<>(size);
+            for (Prism4j.Token token : tokens) {
+                overrides.put(token.name(), token);
+            }
+        }
+
+        final List<Prism4j.Token> origins = grammar.tokens();
+        final List<Prism4j.Token> out = new ArrayList<>(origins.size());
+
+        Prism4j.Token override;
+
+        for (Prism4j.Token origin : origins) {
+
+            // filter out undesired tokens
+            if (!filter.test(origin)) {
+                continue;
+            }
+
             override = overrides.get(origin.name());
             if (override != null) {
                 out.add(override);
