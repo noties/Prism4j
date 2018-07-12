@@ -170,7 +170,7 @@ public abstract class GrammarUtils {
         }
 
         final Map<String, Prism4j.Token> overrides = new HashMap<>(size);
-        for (Prism4j.Token token: tokens) {
+        for (Prism4j.Token token : tokens) {
             overrides.put(token.name(), token);
         }
 
@@ -179,7 +179,7 @@ public abstract class GrammarUtils {
 
         Prism4j.Token override;
 
-        for (Prism4j.Token origin: origins) {
+        for (Prism4j.Token origin : origins) {
             override = overrides.get(origin.name());
             if (override != null) {
                 out.add(override);
@@ -189,6 +189,15 @@ public abstract class GrammarUtils {
         }
 
         return new GrammarImpl(name, out);
+    }
+
+    @NonNull
+    public static Prism4j.Grammar require(@NonNull Prism4j prism4j, @NonNull String name) {
+        final Prism4j.Grammar grammar = prism4j.grammar(name);
+        if (grammar == null) {
+            throw new IllegalStateException("Unexpected state, requested language is not found: " + name);
+        }
+        return grammar;
     }
 
     @NonNull
