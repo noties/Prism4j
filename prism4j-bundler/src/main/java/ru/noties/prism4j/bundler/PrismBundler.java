@@ -1,7 +1,6 @@
 package ru.noties.prism4j.bundler;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
@@ -10,7 +9,6 @@ import com.google.googlejavaformat.java.JavaFormatterOptions;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -51,6 +49,9 @@ public class PrismBundler extends AbstractProcessor {
     private static final String TEMPLATE_CLASS_NAME = "{{class-name}}";
     private static final String TEMPLATE_REAL_LANGUAGE_NAME = "{{real-language-name}}";
     private static final String TEMPLATE_OBTAIN_GRAMMAR = "{{obtain-grammar}}";
+    private static final String TEMPLATE_TRIGGER_MODIFY = "{{trigger-modify}}";
+
+    private final AnnotationsInformation annotationsInformation = AnnotationsInformation.create();
 
     private Messager messager;
     private Elements elements;
@@ -213,14 +214,6 @@ public class PrismBundler extends AbstractProcessor {
             return;
         }
 
-        if (true) {
-            try (InputStream in = PrismBundle.class.getClassLoader().getResourceAsStream(languageSourceFileName(name))) {
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         // read info
         final String source;
         try {
@@ -231,10 +224,11 @@ public class PrismBundler extends AbstractProcessor {
                     "when specifying extend clause", name), e);
         }
 
-        final List<String> aliases = findAliasesInformation(source);
-        final String extend = findExtendInformation(source);
+        final List<String> aliases = annotationsInformation.findAliasesInformation(source);
+        final String extend = annotationsInformation.findExtendInformation(source);
+        final List<String> modify = annotationsInformation.findModifyInformation(source);
 
-        map.put(name, new LanguageInfo(name, aliases, extend, source));
+        map.put(name, new LanguageInfo(name, aliases, extend, modify, source));
 
         if (extend != null) {
             languageInfo(map, extend);
@@ -244,101 +238,6 @@ public class PrismBundler extends AbstractProcessor {
     @NonNull
     private static String languageSourceFileName(@NonNull String name) {
         return String.format(Locale.US, LANGUAGE_SOURCE_PATTERN, name);
-    }
-
-    @Nullable
-    private static String findExtendInformation(@NonNull String source) {
-
-        final String annotation = "@Extend";
-        final int index = source.indexOf(annotation);
-        if (index < 0) {
-            return null;
-        }
-
-        char c;
-
-        final StringBuilder builder = new StringBuilder();
-
-        boolean insideString = false;
-
-        for (int i = index + annotation.length(); i < source.length(); i++) {
-
-            c = source.charAt(i);
-
-            if (Character.isWhitespace(c)) {
-                continue;
-            }
-
-            if ('\"' == c) {
-                insideString = !insideString;
-                if (!insideString) {
-                    break;
-                } else {
-                    continue;
-                }
-            }
-
-            if (insideString) {
-                builder.append(c);
-            }
-        }
-
-        if (builder.length() == 0) {
-            return null;
-        } else {
-            return builder.toString();
-        }
-    }
-
-    @Nullable
-    private static List<String> findAliasesInformation(@NonNull String source) {
-
-        final String annotation = "@Aliases";
-        final int start = source.indexOf(annotation);
-        if (start < 0) {
-            return null;
-        }
-
-        final int end = source.indexOf(')', start);
-        if (end < 0) {
-            return null;
-        }
-
-        final List<String> aliases = new ArrayList<>(3);
-
-        final StringBuilder builder = new StringBuilder();
-
-        char c;
-
-        boolean insideString = false;
-
-        for (int i = start; i < end; i++) {
-
-            c = source.charAt(i);
-
-            if (Character.isWhitespace(c)) {
-                continue;
-            }
-
-            if ('\"' == c) {
-                insideString = !insideString;
-                if (!insideString) {
-                    aliases.add(builder.toString());
-                    builder.setLength(0);
-                }
-                continue;
-            }
-
-            if (insideString) {
-                builder.append(c);
-            }
-        }
-
-        if (aliases.size() == 0) {
-            return null;
-        } else {
-            return aliases;
-        }
     }
 
     @NonNull
@@ -380,6 +279,7 @@ public class PrismBundler extends AbstractProcessor {
         replaceTemplate(builder, TEMPLATE_CLASS_NAME, classInfo.className);
         replaceTemplate(builder, TEMPLATE_REAL_LANGUAGE_NAME, createRealLanguageName(languages));
         replaceTemplate(builder, TEMPLATE_OBTAIN_GRAMMAR, createObtainGrammar(languages));
+        replaceTemplate(builder, TEMPLATE_TRIGGER_MODIFY, createTriggerModify(languages));
         final Formatter formatter = new Formatter(JavaFormatterOptions.defaultOptions());
         try {
             return formatter.formatSource(builder.toString());
@@ -463,11 +363,53 @@ public class PrismBundler extends AbstractProcessor {
         return builder.toString();
     }
 
+    @NonNull
+    private static String createTriggerModify(@NonNull Map<String, LanguageInfo> languages) {
+
+        // so, create a map collection where each entry in `modify` is the key and languageInfo.name is value
+        final Map<String, List<String>> map = new HashMap<>(3);
+
+        List<String> modify;
+
+        for (LanguageInfo info : languages.values()) {
+
+            modify = info.modify;
+
+            if (modify != null
+                    && modify.size() > 0) {
+
+                for (String name : modify) {
+                    map.computeIfAbsent(name, k -> new ArrayList<>(3)).add(info.name);
+                }
+            }
+        }
+
+        if (map.size() == 0) {
+            return "";
+        }
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("switch(name){\n");
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            builder.append("case \"")
+                    .append(entry.getKey())
+                    .append("\":\n");
+            for (String lang : entry.getValue()) {
+                builder.append("prism4j.grammar(\"")
+                        .append(lang)
+                        .append("\");\n");
+            }
+            builder.append("break;\n");
+        }
+        builder.append("}");
+        return builder.toString();
+    }
+
     public static void main(String[] args) {
         final ClassInfo classInfo = new ClassInfo("ru.noties.prism4j.languages", "MyClass");
         final Map<String, LanguageInfo> languages = new HashMap<>();
-        languages.put("clike", new LanguageInfo("clike", null, null, ""));
-        languages.put("markup", new LanguageInfo("markup", null, null, ""));
+        languages.put("clike", new LanguageInfo("clike", null, null, null, ""));
+        languages.put("markup", new LanguageInfo("markup", null, null, null, ""));
         System.out.printf("source: %n%s%n", grammarLocatorSource(grammarLocatorTemplate(), classInfo, languages));
     }
 }

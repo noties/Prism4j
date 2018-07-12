@@ -10,12 +10,20 @@ public class LanguageInfo {
     public final String name;
     public final List<String> aliases;
     public final String extend;
+    public final List<String> modify;
     public final String source;
 
-    public LanguageInfo(@NonNull String name, @Nullable List<String> aliases, @Nullable String extend, @NonNull String source) {
+    public LanguageInfo(
+            @NonNull String name,
+            @Nullable List<String> aliases,
+            @Nullable String extend,
+            @Nullable List<String> modify,
+            @NonNull String source
+    ) {
         this.name = name;
         this.aliases = aliases;
         this.extend = extend;
+        this.modify = modify;
         this.source = source;
     }
 

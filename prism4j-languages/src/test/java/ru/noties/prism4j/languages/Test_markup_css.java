@@ -41,7 +41,7 @@ public class Test_markup_css {
         final TestUtils.Case c = TestUtils.readCase(file);
 
         // yes, now we have to request manually css (as without it won't _modify_ markup to accept styles)
-        prism4j.grammar("css");
+//        prism4j.grammar("css");
         TestUtils.assertCase(c, prism4j.tokenize(c.input, prism4j.grammar("markup")));
     }
 }

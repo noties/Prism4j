@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
+import ru.noties.prism4j.annotations.Modify;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
@@ -12,6 +13,7 @@ import static ru.noties.prism4j.Prism4j.pattern;
 import static ru.noties.prism4j.Prism4j.token;
 
 @SuppressWarnings("unused")
+@Modify("markup")
 public abstract class Prism_css {
 
   // todo: really important one..

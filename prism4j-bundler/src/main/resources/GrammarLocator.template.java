@@ -50,6 +50,7 @@ public class {{class-name}} implements GrammarLocator {
             cache.put(name, NULL);
         } else {
             cache.put(name, grammar);
+            triggerModify(prism4j, name);
         }
 
         return grammar;
@@ -63,5 +64,9 @@ public class {{class-name}} implements GrammarLocator {
     @Nullable
     protected Prism4j.Grammar obtainGrammar(@NonNull Prism4j prism4j, @NonNull String name) {
         {{obtain-grammar}}
+    }
+
+    protected void triggerModify(@NonNull Prism4j prism4j, @NonNull String name) {
+        {{trigger-modify}}
     }
 }

@@ -26,7 +26,7 @@ public class myClass {
 //        }
 //        }
 
-        prism4j.grammar("css");
+//        prism4j.grammar("css");
 
         System.out.printf("markup: %n%s%n", new Gson().toJson(prism4j.grammar("markup")));
     }
