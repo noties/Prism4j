@@ -11,7 +11,6 @@ allprojects {
         google()
     }
     group = GROUP
-    version = VERSION_NAME
 }
 
 task clean(type: Delete) {
@@ -19,7 +18,7 @@ task clean(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion '4.8'
+    gradleVersion '4.8.1'
     distributionType 'all'
 }
 

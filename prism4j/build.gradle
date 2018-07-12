@@ -1,18 +1,13 @@
 apply plugin: 'java-library'
 
+version = VERSION_NAME
+
 sourceSets {
     main.java.srcDirs += '../annotations'
 }
 
 dependencies {
-
     api SUPPORT_ANNOTATIONS
-    annotationProcessor project(':prism4j-bundler')
-
-    testImplementation JUNIT
-    testImplementation COMMONS_IO
-    testImplementation GSON
-    testImplementation IX_JAVA
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7

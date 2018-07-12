@@ -10,10 +10,6 @@ import java.util.regex.Matcher;
 
 public class Prism4j {
 
-    // todo: rest thing (just override/add to existing grammar)
-    // todo: insertBefore
-    // todo: allow delete (it sometimes happen)
-
     public interface Grammar {
 
         @NonNull
@@ -147,15 +143,6 @@ public class Prism4j {
         return new PatternImpl(regex, lookbehind, greedy, alias, inside);
     }
 
-    @NonNull
-    public static Grammar extend(@NonNull Grammar grammar, @NonNull String name, @NonNull List<Token> tokens) {
-        return new GrammarImpl(name, GrammarUtils.extend(grammar.tokens(), tokens));
-    }
-
-    @NonNull
-    public static Grammar extend(@NonNull Grammar grammar, @NonNull String name, Token... tokens) {
-        return new GrammarImpl(name, GrammarUtils.extend(grammar.tokens(), ArrayUtils.toList(tokens)));
-    }
 
     private final GrammarLocator grammarLocator;
 

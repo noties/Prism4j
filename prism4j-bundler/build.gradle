@@ -1,11 +1,11 @@
 apply plugin: 'java-library'
 
+version = VERSION_NAME
+
 sourceSets {
     main.java.srcDirs += '../annotations'
     main.resources.srcDirs += 'src/main/resources'
 }
-
-// todo: find-out why generated source `*.java` files are included
 
 dependencies {
     implementation SUPPORT_ANNOTATIONS
@@ -16,3 +16,10 @@ dependencies {
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+if (project.hasProperty('release')) {
+    if (project.hasProperty('local')) {
+        ext.RELEASE_REPOSITORY_URL = LOCAL_MAVEN_URL
+    }
+    apply from: 'https://raw.githubusercontent.com/noties/gradle-mvn-push/master/gradle-mvn-push-jar.gradle'
+}
