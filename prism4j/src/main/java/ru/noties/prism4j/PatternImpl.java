@@ -3,7 +3,7 @@ package ru.noties.prism4j;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-class PatternImpl implements Prism4j.Pattern {
+public class PatternImpl implements Prism4j.Pattern {
 
     private final java.util.regex.Pattern regex;
     private final boolean lookbehind;
@@ -11,7 +11,7 @@ class PatternImpl implements Prism4j.Pattern {
     private final String alias;
     private final Prism4j.Grammar inside;
 
-    PatternImpl(
+    public PatternImpl(
             @NonNull java.util.regex.Pattern regex,
             boolean lookbehind,
             boolean greedy,

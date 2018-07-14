@@ -2,11 +2,11 @@ package ru.noties.prism4j;
 
 import android.support.annotation.NonNull;
 
-class TextImpl implements Prism4j.Text {
+public class TextImpl implements Prism4j.Text {
 
     private final String literal;
 
-    TextImpl(@NonNull String literal) {
+    public TextImpl(@NonNull String literal) {
         this.literal = literal;
     }
 

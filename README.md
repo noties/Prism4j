@@ -3,9 +3,129 @@
 Simplified Java clone of [prism-js](https://github.com/PrismJS/prism). No rendering, no themes,
 no hooks. But still _a_ language parsing.
 
-## Api
+## Core
+
+Core module `prism4j` is a lightweight module that comes with API (no language definitions).
+
+[![prism4j](https://img.shields.io/maven-central/v/ru.noties/prism4j.svg?label=prism4j)](http://search.maven.org/#search|ga|1|g%3A%22ru.noties%22%20AND%20a%3A%22prism4j%22)
+
+```groovy
+implementation 'ru.noties:prism4j:{latest_version}'
+```
+
+```java
+final Prism4j prism4j = new Prism4j(new MyGrammarLocator());
+final Grammar grammar = prism4j.grammar("json");
+if (grammar != null) {
+    final List<Node> nodes = prism4j.tokenize(code, grammar);
+    final AbsVisitor visitor = new AbsVisitor() {
+            @Override
+            protected void visitText(@NonNull Prism4j.Text text) {
+                // raw text
+                text.literal();
+            }
+
+            @Override
+            protected void visitSyntax(@NonNull Prism4j.Syntax syntax) {
+                // type of the syntax token
+                syntax.type();
+                visit(syntax.children());
+            }
+        };
+    visitor.visit(nodes);
+}
+```
+
+Where `MyGrammarLocator` can be as simple as:
+
+```java
+public class MyGrammarLocator implements GrammarLocator {
+
+    @Nullable
+    @Override
+    public Prism4j.Grammar grammar(@NonNull Prism4j prism4j, @NonNull String language) {
+        switch (language) {
+
+            case "json":
+                return Prism_json.create(prism4j);
+
+            // everything else is omitted
+
+            default:
+                return null;
+        }
+    }
+}
+```
+
+And language definition:
+
+```java
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
+import static ru.noties.prism4j.Prism4j.grammar;
+import static ru.noties.prism4j.Prism4j.pattern;
+import static ru.noties.prism4j.Prism4j.token;
+
+@Aliases("jsonp")
+public class Prism_json {
+
+  @NonNull
+  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+    return grammar(
+      "json",
+      token("property", pattern(compile("\"(?:\\\\.|[^\\\\\"\\r\\n])*\"(?=\\s*:)", CASE_INSENSITIVE))),
+      token("string", pattern(compile("\"(?:\\\\.|[^\\\\\"\\r\\n])*\"(?!\\s*:)"), false, true)),
+      token("number", pattern(compile("\\b0x[\\dA-Fa-f]+\\b|(?:\\b\\d+\\.?\\d*|\\B\\.\\d+)(?:[Ee][+-]?\\d+)?"))),
+      token("punctuation", pattern(compile("[{}\\[\\]);,]"))),
+      token("operator", pattern(compile(":"))),
+      token("boolean", pattern(compile("\\b(?:true|false)\\b", CASE_INSENSITIVE))),
+      token("null", pattern(compile("\\bnull\\b", CASE_INSENSITIVE)))
+    );
+  }
+}
+```
 
 ## Bundler
+
+In order to simplify adding language definitions to your project there is a special module
+called `prism4j-bundler` that will automatically add requested languages.
+
+[![prism4j-bundler](https://img.shields.io/maven-central/v/ru.noties/prism4j-bundler.svg?label=prism4j-bundler)](http://search.maven.org/#search|ga|1|g%3A%22ru.noties%22%20AND%20a%3A%22prism4j-bundler%22)
+
+```groovy
+annotationProcessor 'ru.noties:prism4j-bundler:{latest-version}'
+```
+
+Please note that `bundler` can add languages that are _ported_ (see `./languages` folder for the list).
+Currently it supports:
+* c
+* clike
+* css
+* java
+* javascript (js)
+* json
+* markup (xml, html, mathml, svg)
+
+Please see `contributing` section if you wish to port a language.
+
+```java
+@PrismBundle(
+    includes = { "clike", "java", "c" },
+    name = ".MyGrammarLocator"
+)
+public class MyClass {}
+```
+
+You can have multiple language bundles, just annotate different classes in your project. There are
+no special requirements for a class to be annotated (in can be any class in your project).
+
+* `includes` - indicates what supported languages to add to your project. Please use _real_
+language name (not an alias). So `javascript` instead of `js`; `markup` instead of `xml`.
+
+* `name` - is the Java class name of generated `GrammarLocator`. It can start with a `dot` to
+ put generated `GrammarLocator` to the same package as annotated element. Or be fully qualified Java name (starting with a package).
+
 
 ## Contributing
 
@@ -49,46 +169,36 @@ public class Prism_css {}
 ---
 
 After you are done (haha!) with a language definition please make sure that you also move
-test cases from [prism-js]() for the project (for newly added language of cause). Thankfully
-just a byte of work required here as `prism4j-languages` module understands native format
-of _prism-js_ test cases (that are ending with `*.test`). Please inspect test folder of the
-`prism4j-languages` module for further info.
+test cases from [prism-js](https://github.com/PrismJS/prism) for the project (for newly added
+language of cause). Thankfully just a byte of work required here as `prism4j-languages` module
+understands native format of _prism-js_ test cases (that are ending with `*.test`).
+Please inspect test folder of the `prism4j-languages` module for further info.
 
 Then, if you run:
 ```bash
 ./gradlew :prism4j-languages:test
 ```
 
-and all tests pass (including your newly added), then it's _safe_ to issue a pull request. **Good job! 👏**
+and all tests pass (including your newly added), then it's _safe_ to issue a pull request. **Good job!**
 
 <i><sup>*</sup> BTW, if you know how can test classes be generated via a simple configuration
 step, so there is no need to actually manually create them, it would really cool if you'd share
 this. Java regex grammar parsers would not forget you ever! $-$</i>
 
-### Grammar definitions
+## License
 
-```java
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.compile;
-import static ru.noties.prism4j.Prism4j.grammar;
-import static ru.noties.prism4j.Prism4j.pattern;
-import static ru.noties.prism4j.Prism4j.token;
+```
+  Copyright 2018 Dimitry Ivanov (mail@dimitryivanov.ru)
 
-@Aliases("jsonp")
-public class Prism_json {
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
-    return grammar(
-      "json",
-      token("property", pattern(compile("\"(?:\\\\.|[^\\\\\"\\r\\n])*\"(?=\\s*:)", CASE_INSENSITIVE))),
-      token("string", pattern(compile("\"(?:\\\\.|[^\\\\\"\\r\\n])*\"(?!\\s*:)"), false, true)),
-      token("number", pattern(compile("\\b0x[\\dA-Fa-f]+\\b|(?:\\b\\d+\\.?\\d*|\\B\\.\\d+)(?:[Ee][+-]?\\d+)?"))),
-      token("punctuation", pattern(compile("[{}\\[\\]);,]"))),
-      token("operator", pattern(compile(":"))),
-      token("boolean", pattern(compile("\\b(?:true|false)\\b", CASE_INSENSITIVE))),
-      token("null", pattern(compile("\\bnull\\b", CASE_INSENSITIVE)))
-    );
-  }
-}
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 ```

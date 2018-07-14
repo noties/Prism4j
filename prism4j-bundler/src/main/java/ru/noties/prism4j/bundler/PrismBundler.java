@@ -174,8 +174,6 @@ public class PrismBundler extends AbstractProcessor {
         //  include all languages and additionally generate aliases information
 
         // so, to start we generate a map of languages to include
-
-        // todo: I also think that caching grammars (and not exposing aliases to Prism4j) inside locator is better
     }
 
     private void writeLanguages(@NonNull Set<LanguageInfo> languages) {

@@ -107,6 +107,13 @@ public class Prism4j {
         void visit(@NonNull List<? extends Node> nodes);
     }
 
+    /**
+     * Factory method to create a {@link Grammar}
+     *
+     * @param name   of the defined grammar
+     * @param tokens a list of {@link Token}s
+     * @return an instance of {@link Grammar}
+     */
     @NonNull
     public static Grammar grammar(@NonNull String name, @NonNull List<Token> tokens) {
         return new GrammarImpl(name, tokens);
@@ -209,9 +216,6 @@ public class Prism4j {
                 int lookbehindLength = 0;
 
                 final java.util.regex.Pattern regex = pattern.regex();
-
-                // NB originally (prismjs) here was a check if a pattern is multiline if pattern is greedy
-                // this check has been moved out of here to configuration step (factory `pattern` methods)
 
                 // Don't cache textLength as it changes during the loop
                 for (int i = index, position = startPosition; i < entries.size(); position += entries.get(i).textLength(), ++i) {
