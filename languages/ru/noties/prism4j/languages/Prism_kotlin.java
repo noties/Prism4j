@@ -2,13 +2,13 @@ package ru.noties.prism4j.languages;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
 import ru.noties.prism4j.annotations.Extend;
 
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 import static ru.noties.prism4j.Prism4j.grammar;
 import static ru.noties.prism4j.Prism4j.pattern;
@@ -66,8 +66,14 @@ public class Prism_kotlin {
     final Prism4j.Grammar interpolationInside;
     {
 
-      final List<Prism4j.Token> tokens = GrammarUtils.clone(kotlin).tokens();
-      tokens.add(0, token("delimiter", pattern(compile("^\\$\\{|\\}$"), false, false, "variable")));
+      // okay, I was cloning the tokens of kotlin grammar (so there is no recursive chain of calls),
+      // but it looks like it wants to have recursive calls
+      // I did this because interpolation test was failing due to the fact that `string`
+      // `raw-string` tokens didn't have `inside`, so there were not tokenized
+      // I still find that it has potential to fall with stackoverflow (in some cases)
+      final List<Prism4j.Token> tokens = new ArrayList<>(kotlin.tokens().size() + 1);
+      tokens.add(token("delimiter", pattern(compile("^\\$\\{|\\}$"), false, false, "variable")));
+      tokens.addAll(kotlin.tokens());
 
       interpolationInside = grammar(
         "inside",

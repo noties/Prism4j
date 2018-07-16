@@ -6,9 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-import org.junit.Assert;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +16,8 @@ import java.util.List;
 import ix.Ix;
 import ix.IxFunction;
 import ix.IxPredicate;
+
+import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 
 public abstract class TestUtils {
 
@@ -93,11 +92,18 @@ public abstract class TestUtils {
     }
 
     public static void assertCase(@NonNull Case c, @NonNull List<? extends Prism4j.Node> nodes) {
-//        Assert.assertEquals(c.description, c.simplifiedOutput.toString(), simplify(nodes).toString());
+
+        final String expected = c.simplifiedOutput.toString();
+        final String actual = simplify(nodes).toString();
+
         try {
-            JSONAssert.assertEquals(c.description, c.simplifiedOutput.toString(), simplify(nodes).toString(), true);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+            assertJsonEquals(expected, actual);
+        } catch (AssertionError e) {
+            final String newMessage = c.description + "\n" +
+                    "" + e.getMessage() + "\n" +
+                    "expected: " + expected + "\n" +
+                    "actual  : " + actual + "\n\n";
+            throw new AssertionError(newMessage, e);
         }
     }
 

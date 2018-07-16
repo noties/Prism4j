@@ -30,7 +30,7 @@ dependencies {
     testImplementation COMMONS_IO
     testImplementation IX_JAVA
     testImplementation GSON
-    testImplementation JSON_ASSERT
+    testImplementation JSON_UNIT
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
