@@ -14,6 +14,7 @@ import static ru.noties.prism4j.Prism4j.grammar;
 import static ru.noties.prism4j.Prism4j.pattern;
 import static ru.noties.prism4j.Prism4j.token;
 
+@SuppressWarnings("unused")
 @Aliases("dotnet")
 @Extend("clike")
 public class Prism_csharp {
