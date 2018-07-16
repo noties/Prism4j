@@ -181,7 +181,7 @@ public class PrismBundler extends AbstractProcessor {
         for (LanguageInfo info : languages) {
             Writer writer = null;
             try {
-                final JavaFileObject javaFileObject = filer.createSourceFile(LANGUAGES_PACKAGE + ".Prism_" + info.name);
+                final JavaFileObject javaFileObject = filer.createSourceFile(LANGUAGES_PACKAGE + ".Prism_" + javaValidName(info.name));
                 writer = javaFileObject.openWriter();
                 writer.write(info.source);
             } catch (IOException e) {
@@ -236,7 +236,7 @@ public class PrismBundler extends AbstractProcessor {
 
     @NonNull
     private static String languageSourceFileName(@NonNull String name) {
-        return String.format(Locale.US, LANGUAGE_SOURCE_PATTERN, name);
+        return String.format(Locale.US, LANGUAGE_SOURCE_PATTERN, javaValidName(name));
     }
 
     @NonNull
@@ -311,7 +311,7 @@ public class PrismBundler extends AbstractProcessor {
                         .append("import ")
                         .append(LANGUAGES_PACKAGE)
                         .append(".Prism_")
-                        .append(s)
+                        .append(javaValidName(s))
                         .append(';')
                         .append('\n'));
         return builder.toString();
@@ -363,7 +363,7 @@ public class PrismBundler extends AbstractProcessor {
                         .append(s)
                         .append("\":\n")
                         .append("grammar = Prism_")
-                        .append(s)
+                        .append(javaValidName(s))
                         .append(".create(prism4j);\nbreak;\n"));
         builder.append("default:\ngrammar = null;\n}")
                 .append("return grammar;");
@@ -412,11 +412,16 @@ public class PrismBundler extends AbstractProcessor {
         return builder.toString();
     }
 
-    public static void main(String[] args) {
-        final ClassInfo classInfo = new ClassInfo("ru.noties.prism4j.languages", "MyClass");
-        final Map<String, LanguageInfo> languages = new HashMap<>();
-        languages.put("clike", new LanguageInfo("clike", null, null, null, ""));
-        languages.put("markup", new LanguageInfo("markup", null, null, null, ""));
-        System.out.printf("source: %n%s%n", grammarLocatorSource(grammarLocatorTemplate(), classInfo, languages));
+    @NonNull
+    private static String javaValidName(@NonNull String name) {
+        return name.replaceAll("-", "_");
     }
+
+//    public static void main(String[] args) {
+//        final ClassInfo classInfo = new ClassInfo("ru.noties.prism4j.languages", "MyClass");
+//        final Map<String, LanguageInfo> languages = new HashMap<>();
+//        languages.put("clike", new LanguageInfo("clike", null, null, null, ""));
+//        languages.put("markup", new LanguageInfo("markup", null, null, null, ""));
+//        System.out.printf("source: %n%s%n", grammarLocatorSource(grammarLocatorTemplate(), classInfo, languages));
+//    }
 }

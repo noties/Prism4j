@@ -50,13 +50,13 @@ afterEvaluate {
         FileUtils.readFileToString(file('./src/Test.java.template'), StandardCharsets.UTF_8)
     }.memoize()
 
-    final def createClassName = { "Test_${it.join('_')}" }
+    final def createClassName = { "Test_${it.join('_').replaceAll('-', '_')}" }
 
     final def createInclude = {
         "{${Ix.fromArray(it).map { "\"$it\"" }.join(',')}}"
     }
 
-    final def createGrammarLocator = { "GrammarLocator_${it.join('_')}" }
+    final def createGrammarLocator = { "GrammarLocator_${it.join('_').replaceAll('-', '_')}" }
 
     final def createSource = { include, grammarLocator, className, folderName, rootGrammar  ->
         template()
