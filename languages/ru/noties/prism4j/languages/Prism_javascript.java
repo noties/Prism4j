@@ -2,6 +2,9 @@ package ru.noties.prism4j.languages;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
 import ru.noties.prism4j.annotations.Aliases;
@@ -20,7 +23,6 @@ import static ru.noties.prism4j.Prism4j.token;
 @Extend("clike")
 public class Prism_javascript {
 
-  // please note that nested string interpolation is disabled
   @NonNull
   public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
 
@@ -49,15 +51,7 @@ public class Prism_javascript {
       token("constant", pattern(compile("\\b[A-Z][A-Z\\d_]*\\b")))
     );
 
-    // let's clone js here (before adding interpolation)
-    final Prism4j.Grammar jsInterpolation = GrammarUtils.clone(js);
-    jsInterpolation.tokens().add(
-      0,
-      token(
-        "interpolation-punctuation",
-        pattern(compile("^\\$\\{|}$"), false, false, "punctuation")
-      )
-    );
+    final Prism4j.Token interpolation = token("interpolation");
 
     GrammarUtils.insertBeforeToken(js, "string",
       token(
@@ -69,21 +63,31 @@ public class Prism_javascript {
           null,
           grammar(
             "inside",
-            token(
-              "interpolation",
-              pattern(
-                compile("\\$\\{[^}]+}"),
-                false,
-                false,
-                null,
-                jsInterpolation
-              )
-            ),
+            interpolation,
             token("string", pattern(compile("[\\s\\S]+")))
           )
         )
       )
     );
+
+    final Prism4j.Grammar insideInterpolation;
+    {
+      final List<Prism4j.Token> tokens = new ArrayList<>(js.tokens().size() + 1);
+      tokens.add(token(
+        "interpolation-punctuation",
+        pattern(compile("^\\$\\{|}$"), false, false, "punctuation")
+      ));
+      tokens.addAll(js.tokens());
+      insideInterpolation = grammar("inside", tokens);
+    }
+
+    interpolation.patterns().add(pattern(
+      compile("\\$\\{[^}]+}"),
+      false,
+      false,
+      null,
+      insideInterpolation
+    ));
 
     final Prism4j.Grammar markup = prism4j.grammar("markup");
     if (markup != null) {
