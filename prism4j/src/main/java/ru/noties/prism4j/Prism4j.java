@@ -222,7 +222,7 @@ public class Prism4j {
 
                     if (entries.size() > textLength) {
                         throw new RuntimeException("Prism4j internal error. Number of entry nodes " +
-                                "is greater that text length.\n" +
+                                "is greater that the text length.\n" +
                                 "Nodes: " + entries + "\n" +
                                 "Text: " + text);
                     }

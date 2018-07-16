@@ -1,7 +1,7 @@
 # Prism4j
 
 Simplified Java clone of [prism-js](https://github.com/PrismJS/prism). No rendering, no themes,
-no hooks. But still _a_ language parsing.
+no hooks, no plugins. But still _a_ language parsing. Primary aim of this library is to provide a _tokenization_ strategy of arbitrary syntaxes for later processing. Works on Android (great with [Markwon](https://github.com/noties/Markwon) - markdown display library). 
 
 ## Core
 
@@ -99,15 +99,28 @@ annotationProcessor 'ru.noties:prism4j-bundler:{latest-version}'
 
 Please note that `bundler` can add languages that are _ported_ (see `./languages` folder for the list).
 Currently it supports:
-* c
-* clike
-* css
-* java
-* javascript (js)
-* json
-* markup (xml, html, mathml, svg)
+* `brainf*ck`
+* `c`
+* `clike`
+* `clojure`
+* `cpp`
+* `csharp` (`dotnet`)
+* `css` (+`css-extras`)
+* `dart`
+* `git`
+* `go`
+* `java`
+* `javascript` (`js`)
+* `json` (`jsonp`)
+* `kotlin`
+* `latex`
+* `makefile`
+* `markup` (`xml`, `html`, `mathml`, `svg`)
+* `python`
+* `sql`
+* `yaml`
 
-Please see `contributing` section if you wish to port a language.
+Please see `Contributing` section if you wish to port a language.
 
 ```java
 @PrismBundle(
@@ -144,6 +157,10 @@ and `@Modify` annotations can be used:
 * `@Aliases` specifies what aliases a language has. For example `markup` language has
 these: `@Aliases({"html", "xml", "mathml", "svg"})`. So when a `GrammarLocator` will be
 asked for a `svg` language the `markup` will be returned.
+```java
+@Aliases({"html", "xml", "mathml", "svg"})
+public class Prism_markup {}
+```
 
 * `@Extend` annotation indicates if a language definition is a sibling of another one.
 So even if a parent language is not included in `@PrismBundle` it will be added to a project
@@ -172,7 +189,7 @@ After you are done (haha!) with a language definition please make sure that you 
 test cases from [prism-js](https://github.com/PrismJS/prism) for the project (for newly added
 language of cause). Thankfully just a byte of work required here as `prism4j-languages` module
 understands native format of _prism-js_ test cases (that are ending with `*.test`).
-Please inspect test folder of the `prism4j-languages` module for further info.
+Please inspect test folder of the `prism4j-languages` module for further info. In short: copy test cases from `prism-js` project (the whole folder for specific language) into `prism4j-languages/src/test/resources/languages/` folder. 
 
 Then, if you run:
 ```bash
@@ -180,10 +197,6 @@ Then, if you run:
 ```
 
 and all tests pass (including your newly added), then it's _safe_ to issue a pull request. **Good job!**
-
-<i><sup>*</sup> BTW, if you know how can test classes be generated via a simple configuration
-step, so there is no need to actually manually create them, it would really cool if you'd share
-this. Java regex grammar parsers would not forget you ever! $-$</i>
 
 ## License
 

@@ -11,10 +11,35 @@ import java.util.Map;
 
 public abstract class GrammarUtils {
 
+    /**
+     * Used when extending an existing grammar to filter out tokens that should not be cloned.
+     *
+     * @see #extend(Prism4j.Grammar, String, TokenFilter, Prism4j.Token...)
+     */
     public interface TokenFilter {
+
+        /**
+         * @param token {@link ru.noties.prism4j.Prism4j.Token} to validate
+         * @return a boolean indicating if supplied token should be included (passes the test)
+         */
         boolean test(@NonNull Prism4j.Token token);
     }
 
+    /**
+     * Helper method to find a token inside grammar. Supports lookup in `inside` grammars. For
+     * example given the path: {@code first-token/then-another/and-more } this method will do:
+     * <ul>
+     * <li>Look for `first-token` at root level of supplied grammar</li>
+     * <li>If it\'s found search for first pattern with `inside` grammar</li>
+     * <li>If it\'s found search for `then-another` token in this inside grammar</li>
+     * <li>etc</li>
+     * </ul>
+     * Simple path {@code simple-root-level } is also supported
+     *
+     * @param grammar {@link ru.noties.prism4j.Prism4j.Grammar}
+     * @param path    argument to find a {@link ru.noties.prism4j.Prism4j.Token}
+     * @return a found {@link ru.noties.prism4j.Prism4j.Token} or null
+     */
     @Nullable
     public static Prism4j.Token findToken(@NonNull Prism4j.Grammar grammar, @NonNull String path) {
         final String[] parts = path.split("/");
@@ -248,33 +273,6 @@ public abstract class GrammarUtils {
         }
         return grammar;
     }
-
-//    @NonNull
-//    static List<Prism4j.Token> extend(
-//            @NonNull List<Prism4j.Token> origin,
-//            @NonNull List<Prism4j.Token> replace
-//    ) {
-//
-//        // we copy everything into a new list from origin only if it's not overriden by replace
-//
-//        // prepare a map with replace tokens
-//        final Map<String, Prism4j.Token> overrides = new HashMap<>(replace.size());
-//        for (Prism4j.Token token : replace) {
-//            overrides.put(token.name(), token);
-//        }
-//
-//        final List<Prism4j.Token> out = new ArrayList<>(origin.size());
-//        for (Prism4j.Token token : origin) {
-//            final Prism4j.Token replacement = overrides.get(token.name());
-//            if (replacement != null) {
-//                out.add(replacement);
-//            } else {
-//                out.add(token);
-//            }
-//        }
-//
-//        return out;
-//    }
 
     private GrammarUtils() {
     }
