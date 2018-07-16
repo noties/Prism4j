@@ -6,7 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.junit.Assert;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,14 +93,19 @@ public abstract class TestUtils {
     }
 
     public static void assertCase(@NonNull Case c, @NonNull List<? extends Prism4j.Node> nodes) {
-        Assert.assertEquals(c.description, c.simplifiedOutput.toString(), simplify(nodes).toString());
+//        Assert.assertEquals(c.description, c.simplifiedOutput.toString(), simplify(nodes).toString());
+        try {
+            JSONAssert.assertEquals(c.description, c.simplifiedOutput.toString(), simplify(nodes).toString(), true);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @NonNull
     private static JsonArray simplify(@NonNull List<? extends Prism4j.Node> nodes) {
         // root array
         final JsonArray array = new JsonArray();
-        for (Prism4j.Node node: nodes) {
+        for (Prism4j.Node node : nodes) {
             if (node instanceof Prism4j.Text) {
                 final String literal = ((Prism4j.Text) node).literal();
                 if (literal.trim().length() != 0) {

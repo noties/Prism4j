@@ -37,6 +37,7 @@ import javax.tools.JavaFileObject;
 import ix.Ix;
 import ru.noties.prism4j.annotations.PrismBundle;
 
+import static javax.tools.Diagnostic.Kind.ERROR;
 import static javax.tools.Diagnostic.Kind.NOTE;
 
 public class PrismBundler extends AbstractProcessor {
@@ -259,6 +260,14 @@ public class PrismBundler extends AbstractProcessor {
             className = name.substring(1);
         } else {
             final int index = name.lastIndexOf('.');
+            if (index < 0) {
+                // we won't allow _default_ package (aka no package)
+                messager.printMessage(ERROR, "No package info specified for grammar " +
+                        "locator. In can start with a `dot` to put in the same package or must be " +
+                        "fully specified, for example: `com.mypackage`", element);
+                throw new RuntimeException("No package info is specified. See error output " +
+                        "for more details");
+            }
             packageName = name.substring(0, index);
             className = name.substring(index + 1);
         }

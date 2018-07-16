@@ -31,6 +31,7 @@ ext {
     COMMONS_IO = 'commons-io:commons-io:2.6'
     GOOGLE_JAVA_FORMAT = 'com.google.googlejavaformat:google-java-format:1.6'
     GSON = 'com.google.code.gson:gson:2.8.5'
+    JSON_ASSERT = 'org.skyscreamer:jsonassert:1.5.0'
 
     JUNIT = 'junit:junit:4.12'
 }

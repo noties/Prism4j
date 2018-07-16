@@ -1,7 +1,24 @@
+import ix.Ix
+import org.apache.commons.io.FileUtils
+
+import java.nio.charset.StandardCharsets
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath IX_JAVA
+        classpath COMMONS_IO
+    }
+}
+
 apply plugin: 'java-library'
 
 sourceSets {
     main.java.srcDirs += '../languages'
+    test.java.srcDirs += './build/src-gen/'
 }
 
 dependencies {
@@ -13,7 +30,62 @@ dependencies {
     testImplementation COMMONS_IO
     testImplementation IX_JAVA
     testImplementation GSON
+    testImplementation JSON_ASSERT
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
+
+afterEvaluate {
+
+    final def root = file('./build/src-gen/ru/noties/prism4j/languages')
+    if (!root.exists()) {
+        FileUtils.forceMkdir(root)
+    } else {
+        // let's clean this directory each time
+        FileUtils.cleanDirectory(root)
+    }
+
+    final def template = {
+        FileUtils.readFileToString(file('./src/Test.java.template'), StandardCharsets.UTF_8)
+    }.memoize()
+
+    final def createClassName = { "Test_${it.join('_')}" }
+
+    final def createInclude = {
+        "{${Ix.fromArray(it).map { "\"$it\"" }.join(',')}}"
+    }
+
+    final def createGrammarLocator = { "GrammarLocator_${it.join('_')}" }
+
+    final def createSource = { include, grammarLocator, className, folderName, rootGrammar  ->
+        template()
+            .replaceAll("\\{\\{include}}", include)
+            .replaceAll("\\{\\{grammar-locator}}", grammarLocator)
+            .replaceAll("\\{\\{class-name}}", className)
+            .replaceAll("\\{\\{folder-name}}", folderName)
+            .replaceAll("\\{\\{root-grammar}}", rootGrammar)
+    }
+
+    Ix.fromArray(file('./src/test/resources/languages/').listFiles())
+            .filter { it.isDirectory() }
+            .map { new Tuple2<File, String[]>(it, it.name.split('!?\\+')) }
+            .forEach {
+                final def className = createClassName(it.second)
+                final def file = new File((File) root, className + '.java')
+                if (!file.createNewFile()) {
+                    throw new IOException("Cannot create a file at path: ${file.path}")
+                }
+                FileUtils.writeStringToFile(
+                        file,
+                        createSource(
+                                createInclude(it.second),
+                                createGrammarLocator(it.second),
+                                className,
+                                it.first.name,
+                                it.second[0]
+                        ),
+                        StandardCharsets.UTF_8
+                )
+            }
+}
