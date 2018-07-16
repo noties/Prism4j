@@ -139,6 +139,8 @@ language name (not an alias). So `javascript` instead of `js`; `markup` instead 
 * `name` - is the Java class name of generated `GrammarLocator`. It can start with a `dot` to
  put generated `GrammarLocator` to the same package as annotated element. Or be fully qualified Java name (starting with a package).
 
+### !important
+**NB** generated `GrammarLocator` will create languages when they are requested (aka _lazy_ loading). Make sure this works for you by keeping as is or by manually triggering language creation via `prism4j.grammar("my-language");` when convenient at runtime.
 
 ## Contributing
 
@@ -197,6 +199,12 @@ Then, if you run:
 ```
 
 and all tests pass (including your newly added), then it's _safe_ to issue a pull request. **Good job!**
+
+### Important note about regex for contributors
+
+As this project _wants_ to work on Android, your regex's patterns must have `}` symbol escaped (`\\}`). Yes, _an_ IDE will warn you that this escape is not needed, but do not believe it. Pattern just won't compile at runtime (Android). I wish this could be unit-**tested** but unfortunately Robolectric compiles just fine (no surprise actually).
+
+
 
 ## License
 
