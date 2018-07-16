@@ -57,7 +57,7 @@ public class Prism_javascript {
       token(
         "template-string",
         pattern(
-          compile("`(?:\\\\[\\s\\S]|\\$\\{[^}]+}|[^\\\\`])*`"),
+          compile("`(?:\\\\[\\s\\S]|\\$\\{[^}]+\\}|[^\\\\`])*`"),
           false,
           true,
           null,
@@ -75,14 +75,14 @@ public class Prism_javascript {
       final List<Prism4j.Token> tokens = new ArrayList<>(js.tokens().size() + 1);
       tokens.add(token(
         "interpolation-punctuation",
-        pattern(compile("^\\$\\{|}$"), false, false, "punctuation")
+        pattern(compile("^\\$\\{|\\}$"), false, false, "punctuation")
       ));
       tokens.addAll(js.tokens());
       insideInterpolation = grammar("inside", tokens);
     }
 
     interpolation.patterns().add(pattern(
-      compile("\\$\\{[^}]+}"),
+      compile("\\$\\{[^}]+\\}"),
       false,
       false,
       null,
