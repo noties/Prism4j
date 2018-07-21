@@ -109,6 +109,7 @@ Currently it supports:
 * `dart`
 * `git`
 * `go`
+* `groovy` (no string interpolation)
 * `java`
 * `javascript` (`js`)
 * `json` (`jsonp`)
