@@ -115,6 +115,7 @@ Currently it supports:
 * `kotlin`
 * `latex`
 * `makefile`
+* `markdown`
 * `markup` (`xml`, `html`, `mathml`, `svg`)
 * `python`
 * `sql`
