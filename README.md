@@ -121,6 +121,7 @@ Currently it supports:
 * `python`
 * `scala`
 * `sql`
+* `swift`
 * `yaml`
 
 Please see `Contributing` section if you wish to port a language.
