@@ -119,6 +119,7 @@ Currently it supports:
 * `markdown`
 * `markup` (`xml`, `html`, `mathml`, `svg`)
 * `python`
+* `scala`
 * `sql`
 * `yaml`
 
