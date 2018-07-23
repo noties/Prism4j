@@ -22,17 +22,22 @@ public class GrammarUtilsTest {
 
     @Test
     public void clone_grammar() {
+
         Ix.from(grammarLocator.languages())
-                .orderBy(new IxFunction<String, Comparable>() {
+                .orderBy(new IxFunction<String, String>() {
                     @Override
-                    public Comparable apply(String s) {
+                    public String apply(String s) {
                         return s;
                     }
                 })
                 .foreach(new IxConsumer<String>() {
                     @Override
                     public void accept(String s) {
-                        GrammarUtils.clone(prism4j.grammar(s));
+                        final Prism4j.Grammar grammar = prism4j.grammar(s);
+                        if (grammar != null) {
+                            System.err.printf("cloning language: %s%n", s);
+                            GrammarUtils.clone(grammar);
+                        }
                     }
                 });
     }

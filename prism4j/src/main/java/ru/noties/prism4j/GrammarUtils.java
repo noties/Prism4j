@@ -153,34 +153,17 @@ public abstract class GrammarUtils {
 
     @NonNull
     public static Prism4j.Grammar clone(@NonNull Prism4j.Grammar grammar) {
-        final List<Prism4j.Token> tokens = grammar.tokens();
-        final List<Prism4j.Token> copy = new ArrayList<>(tokens.size());
-        for (Prism4j.Token token : tokens) {
-            copy.add(clone(token));
-        }
-        return new GrammarImpl(grammar.name(), copy);
+        return CLONER.clone(grammar);
     }
 
     @NonNull
     public static Prism4j.Token clone(@NonNull Prism4j.Token token) {
-        final List<Prism4j.Pattern> patterns = token.patterns();
-        final List<Prism4j.Pattern> copy = new ArrayList<>(patterns.size());
-        for (Prism4j.Pattern pattern : patterns) {
-            copy.add(clone(pattern));
-        }
-        return new TokenImpl(token.name(), copy);
+        return CLONER.clone(token);
     }
 
     @NonNull
     public static Prism4j.Pattern clone(@NonNull Prism4j.Pattern pattern) {
-        final Prism4j.Grammar inside = pattern.inside();
-        return new PatternImpl(
-                pattern.regex(),
-                pattern.lookbehind(),
-                pattern.greedy(),
-                pattern.alias(),
-                inside != null ? clone(inside) : null
-        );
+        return CLONER.clone(pattern);
     }
 
     @NonNull
@@ -276,4 +259,6 @@ public abstract class GrammarUtils {
 
     private GrammarUtils() {
     }
+
+    private static final Cloner CLONER = Cloner.create();
 }
