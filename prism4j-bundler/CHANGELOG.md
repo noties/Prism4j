@@ -1,5 +1,6 @@
 # 1.1.0
-* Fix issue when cloning a grammar was causing stack overflow (recursive copying)
+* Add `languages()` method to generated `GrammarLocator` class
+* Allow `includeAll` option (include all available languages)
 * Add language support:
 * * `groovy` (no string interpolation)
 * * `markdown`
