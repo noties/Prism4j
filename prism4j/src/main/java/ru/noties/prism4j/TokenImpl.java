@@ -28,9 +28,6 @@ public class TokenImpl implements Prism4j.Token {
 
     @Override
     public String toString() {
-        return "TokenImpl{" +
-                "name='" + name + '\'' +
-                ", patterns=" + patterns +
-                '}';
+        return ToString.toString(this);
     }
 }

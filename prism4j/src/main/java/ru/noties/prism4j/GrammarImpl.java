@@ -28,9 +28,6 @@ public class GrammarImpl implements Prism4j.Grammar {
 
     @Override
     public String toString() {
-        return "GrammarImpl{" +
-                "name='" + name + '\'' +
-                ", tokens=" + tokens +
-                '}';
+        return ToString.toString(this);
     }
 }
