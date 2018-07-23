@@ -21,6 +21,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -43,7 +45,8 @@ import static javax.tools.Diagnostic.Kind.NOTE;
 public class PrismBundler extends AbstractProcessor {
 
     private static final String LANGUAGES_PACKAGE = "ru.noties.prism4j.languages";
-    private static final String LANGUAGE_SOURCE_PATTERN = "languages/ru/noties/prism4j/languages/Prism_%1$s.java";
+    private static final String LANGUAGES_FOLDER = "languages/ru/noties/prism4j/languages/";
+    private static final String LANGUAGE_SOURCE_PATTERN = LANGUAGES_FOLDER + "Prism_%1$s.java";
 
     private static final String TEMPLATE_PACKAGE_NAME = "{{package-name}}";
     private static final String TEMPLATE_IMPORTS = "{{imports}}";
@@ -51,8 +54,12 @@ public class PrismBundler extends AbstractProcessor {
     private static final String TEMPLATE_REAL_LANGUAGE_NAME = "{{real-language-name}}";
     private static final String TEMPLATE_OBTAIN_GRAMMAR = "{{obtain-grammar}}";
     private static final String TEMPLATE_TRIGGER_MODIFY = "{{trigger-modify}}";
+    private static final String TEMPLATE_LANGUAGES = "{{languages}}";
+
+    private static final Pattern LANGUAGE_NAME = Pattern.compile("Prism\\_(\\w+)\\.java");
 
     private final AnnotationsInformation annotationsInformation = AnnotationsInformation.create();
+    private final ListResources listResources = ListResources.create();
 
     private Messager messager;
     private Elements elements;
@@ -124,27 +131,15 @@ public class PrismBundler extends AbstractProcessor {
             return Collections.emptySet();
         }
 
-        final Map<String, LanguageInfo> languages;
-        {
-            final List<String> names = processLanguageNames(bundle.include());
-            final int size = names.size();
-            if (size > 0) {
-                languages = new LinkedHashMap<>(size);
-                for (String name : names) {
-                    languageInfo(languages, name);
-                }
-            } else {
-                languages = null;
-            }
-        }
+        final Map<String, LanguageInfo> languages = prepareLanguages(bundle);
 
-        if (languages == null
-                || languages.size() == 0) {
+        if (languages.size() == 0) {
+            messager.printMessage(ERROR, "No languages are specified to be included", element);
             throw new RuntimeException("No languages are specified to be included");
         }
 
         final String template = grammarLocatorTemplate();
-        final ClassInfo classInfo = classInfo(element, bundle.name());
+        final ClassInfo classInfo = classInfo(element, bundle.grammarLocatorClassName());
         final String source = grammarLocatorSource(template, classInfo, languages);
 
         Writer writer = null;
@@ -175,6 +170,49 @@ public class PrismBundler extends AbstractProcessor {
         //  include all languages and additionally generate aliases information
 
         // so, to start we generate a map of languages to include
+    }
+
+    @NonNull
+    private Map<String, LanguageInfo> prepareLanguages(@NonNull PrismBundle bundle) {
+
+        final Map<String, LanguageInfo> languages;
+
+        final List<String> names;
+
+        if (bundle.includeAll()) {
+            // list files from our resources folder and create names
+            names = allLanguages();
+        } else {
+            names = processLanguageNames(bundle.include());
+        }
+
+        final int size = names.size();
+        if (size > 0) {
+            languages = new LinkedHashMap<>(size);
+            for (String name : names) {
+                languageInfo(languages, name);
+            }
+        } else {
+            languages = Collections.emptyMap();
+        }
+
+        return languages;
+    }
+
+    @NonNull
+    private List<String> allLanguages() {
+
+        final List<String> list = listResources.listResourceFiles(PrismBundler.class, LANGUAGES_FOLDER);
+        if (list.size() == 0) {
+            throw new RuntimeException("Cannot obtain language files");
+        }
+
+        return Ix.from(list)
+                .map(LANGUAGE_NAME::matcher)
+                .filter(Matcher::matches)
+                .map(m -> m.group(1))
+                .map(s -> s.replace('_', '-'))
+                .toList();
     }
 
     private void writeLanguages(@NonNull Set<LanguageInfo> languages) {
@@ -287,6 +325,7 @@ public class PrismBundler extends AbstractProcessor {
         replaceTemplate(builder, TEMPLATE_REAL_LANGUAGE_NAME, createRealLanguageName(languages));
         replaceTemplate(builder, TEMPLATE_OBTAIN_GRAMMAR, createObtainGrammar(languages));
         replaceTemplate(builder, TEMPLATE_TRIGGER_MODIFY, createTriggerModify(languages));
+        replaceTemplate(builder, TEMPLATE_LANGUAGES, createLanguages(languages));
         final Formatter formatter = new Formatter(JavaFormatterOptions.defaultOptions());
         try {
             return formatter.formatSource(builder.toString());
@@ -417,11 +456,23 @@ public class PrismBundler extends AbstractProcessor {
         return name.replaceAll("-", "_");
     }
 
-//    public static void main(String[] args) {
-//        final ClassInfo classInfo = new ClassInfo("ru.noties.prism4j.languages", "MyClass");
-//        final Map<String, LanguageInfo> languages = new HashMap<>();
-//        languages.put("clike", new LanguageInfo("clike", null, null, null, ""));
-//        languages.put("markup", new LanguageInfo("markup", null, null, null, ""));
-//        System.out.printf("source: %n%s%n", grammarLocatorSource(grammarLocatorTemplate(), classInfo, languages));
-//    }
+    @NonNull
+    private static String createLanguages(@NonNull Map<String, LanguageInfo> languages) {
+
+        final StringBuilder builder = new StringBuilder();
+        final List<String> list = new ArrayList<>(languages.keySet());
+        list.sort(String::compareTo);
+
+        builder.append("final Set<String> set = new HashSet<String>(")
+                .append(list.size())
+                .append(");\n");
+
+        for (String language : list) {
+            builder.append("set.add(\"").append(language).append("\");\n");
+        }
+
+        builder.append("return set;");
+
+        return builder.toString();
+    }
 }

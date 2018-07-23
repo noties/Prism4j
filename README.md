@@ -109,15 +109,19 @@ Currently it supports:
 * `dart`
 * `git`
 * `go`
+* `groovy` (no string interpolation)
 * `java`
 * `javascript` (`js`)
 * `json` (`jsonp`)
 * `kotlin`
 * `latex`
 * `makefile`
+* `markdown`
 * `markup` (`xml`, `html`, `mathml`, `svg`)
 * `python`
+* `scala`
 * `sql`
+* `swift`
 * `yaml`
 
 Please see `Contributing` section if you wish to port a language.
@@ -125,7 +129,7 @@ Please see `Contributing` section if you wish to port a language.
 ```java
 @PrismBundle(
     includes = { "clike", "java", "c" },
-    name = ".MyGrammarLocator"
+    grammarLocatorClassName = ".MyGrammarLocator"
 )
 public class MyClass {}
 ```
@@ -136,7 +140,7 @@ no special requirements for a class to be annotated (in can be any class in your
 * `includes` - indicates what supported languages to add to your project. Please use _real_
 language name (not an alias). So `javascript` instead of `js`; `markup` instead of `xml`.
 
-* `name` - is the Java class name of generated `GrammarLocator`. It can start with a `dot` to
+* `grammarLocatorClassName` - is the Java class name of generated `GrammarLocator`. It can start with a `dot` to
  put generated `GrammarLocator` to the same package as annotated element. Or be fully qualified Java name (starting with a package).
 
 ### !important

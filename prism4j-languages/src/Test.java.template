@@ -9,12 +9,13 @@ import org.junit.runners.Parameterized;
 
 import java.util.Collection;
 
+import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
 import ru.noties.prism4j.TestUtils;
 import ru.noties.prism4j.annotations.PrismBundle;
 
 @RunWith(Parameterized.class)
-@PrismBundle(include = {{include}}, name = ".{{grammar-locator}}")
+@PrismBundle(include = {{include}}, grammarLocatorClassName = ".{{grammar-locator}}")
 public class {{class-name}} {
 
     @Parameterized.Parameters(name = "{0}")
@@ -40,5 +41,12 @@ public class {{class-name}} {
     public void test() {
         final TestUtils.Case c = TestUtils.readCase(file);
         TestUtils.assertCase(c, prism4j.tokenize(c.input, prism4j.grammar("{{root-grammar}}")));
+    }
+
+    @Test
+    public void test_clonned() {
+        final TestUtils.Case c = TestUtils.readCase(file);
+        final Prism4j.Grammar grammar = GrammarUtils.clone(prism4j.grammar("{{root-grammar}}"));
+        TestUtils.assertCase(c, prism4j.tokenize(c.input, grammar));
     }
 }

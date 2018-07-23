@@ -1,11 +1,15 @@
 package {{package-name}};
 
 import android.support.annotation.NonNull;
+
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ru.noties.prism4j.GrammarLocator;
 import ru.noties.prism4j.Prism4j;
@@ -68,5 +72,11 @@ public class {{class-name}} implements GrammarLocator {
 
     protected void triggerModify(@NonNull Prism4j prism4j, @NonNull String name) {
         {{trigger-modify}}
+    }
+
+    @Override
+    @NonNull
+    public Set<String> languages() {
+        {{languages}}
     }
 }

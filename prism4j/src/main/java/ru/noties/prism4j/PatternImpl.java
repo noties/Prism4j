@@ -54,12 +54,6 @@ public class PatternImpl implements Prism4j.Pattern {
 
     @Override
     public String toString() {
-        return "PatternImpl{" +
-                "regex=" + regex +
-                ", lookbehind=" + lookbehind +
-                ", greedy=" + greedy +
-                ", alias='" + alias + '\'' +
-                ", inside=" + inside +
-                '}';
+        return ToString.toString(this);
     }
 }
