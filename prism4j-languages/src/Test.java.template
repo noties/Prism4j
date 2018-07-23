@@ -14,7 +14,7 @@ import ru.noties.prism4j.TestUtils;
 import ru.noties.prism4j.annotations.PrismBundle;
 
 @RunWith(Parameterized.class)
-@PrismBundle(include = {{include}}, name = ".{{grammar-locator}}")
+@PrismBundle(include = {{include}}, grammarLocatorClassName = ".{{grammar-locator}}")
 public class {{class-name}} {
 
     @Parameterized.Parameters(name = "{0}")

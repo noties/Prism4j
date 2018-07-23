@@ -3,6 +3,8 @@ package ru.noties.prism4j;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Set;
+
 /**
  * Basic class to locate grammars
  *
@@ -12,4 +14,11 @@ public interface GrammarLocator {
 
     @Nullable
     Prism4j.Grammar grammar(@NonNull Prism4j prism4j, @NonNull String language);
+
+    /**
+     * @return collection of languages included into this locator
+     * @since 1.1.0
+     */
+    @NonNull
+    Set<String> languages();
 }
