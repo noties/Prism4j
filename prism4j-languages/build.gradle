@@ -33,10 +33,10 @@ dependencies {
     // use local projects... so, these artifacts must be push to local maven first
 
 //    implementation project(':prism4j')
-    implementation "io.noties:prism4j:$version"
+    implementation "io.noties:prism4j:2.0.0-SNAPSHOT"
 
 //    testAnnotationProcessor project(':prism4j-bundler')
-    testAnnotationProcessor "io.noties:prism4j-bundler:$version"
+    testAnnotationProcessor "io.noties:prism4j-bundler:2.0.0-SNAPSHOT"
     
     testImplementation JUNIT
     testImplementation COMMONS_IO

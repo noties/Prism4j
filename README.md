@@ -7,10 +7,10 @@ no hooks, no plugins. But still _a_ language parsing. Primary aim of this librar
 
 Core module `prism4j` is a lightweight module that comes with API (no language definitions).
 
-[![prism4j](https://img.shields.io/maven-central/v/ru.noties/prism4j.svg?label=prism4j)](http://search.maven.org/#search|ga|1|g%3A%22ru.noties%22%20AND%20a%3A%22prism4j%22)
+[![prism4j](https://img.shields.io/maven-central/v/io.noties/prism4j.svg?label=prism4j)](http://search.maven.org/#search|ga|1|g%3A%22io.noties%22%20AND%20a%3A%22prism4j%22)
 
-```groovy
-implementation io
+```kotlin
+implementation "io.noties:prism4j:${prism_version}"
 ```
 
 ```java
@@ -63,9 +63,9 @@ And language definition:
 ```java
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
-import static ru.noties.prism4j.Prism4j.grammar;
-import static ru.noties.prism4j.Prism4j.pattern;
-import static ru.noties.prism4j.Prism4j.token;
+import static io.noties.prism4j.Prism4j.grammar;
+import static io.noties.prism4j.Prism4j.pattern;
+import static io.noties.prism4j.Prism4j.token;
 
 @Aliases("jsonp")
 public class Prism_json {
@@ -91,10 +91,10 @@ public class Prism_json {
 In order to simplify adding language definitions to your project there is a special module
 called `prism4j-bundler` that will automatically add requested languages.
 
-[![prism4j-bundler](https://img.shields.io/maven-central/v/ru.noties/prism4j-bundler.svg?label=prism4j-bundler)](http://search.maven.org/#search|ga|1|g%3A%22ru.noties%22%20AND%20a%3A%22prism4j-bundler%22)
+[![prism4j-bundler](https://img.shields.io/maven-central/v/io.noties/prism4j-bundler.svg?label=prism4j-bundler)](http://search.maven.org/#search|ga|1|g%3A%22io.noties%22%20AND%20a%3A%22prism4j-bundler%22)
 
-```groovy
-annotationProcessor 'io.noties:prism4j-bundler:{latest-version}'
+```kotlin
+annotationProcessor 'io.noties:prism4j-bundler:${prism_version}'
 ```
 
 Please note that `bundler` can add languages that are _ported_ (see `./languages` folder for the list).
@@ -213,7 +213,7 @@ As this project _wants_ to work on Android, your regex's patterns must have `}` 
 ## License
 
 ```
-  Copyright 2018 Dimitry Ivanov (mail@dimitryivanov.io)
+  Copyright 2019 Dimitry Ivanov (legal@noties.io)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
