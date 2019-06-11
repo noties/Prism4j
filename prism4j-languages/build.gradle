@@ -6,12 +6,18 @@ import java.nio.charset.StandardCharsets
 buildscript {
     repositories {
         jcenter()
-        google()
     }
     dependencies {
         classpath IX_JAVA
         classpath COMMONS_IO
     }
+}
+
+repositories {
+    if (project.hasProperty('LOCAL_MAVEN_URL')) {
+        maven { url LOCAL_MAVEN_URL }
+    }
+    jcenter()
 }
 
 apply plugin: 'java-library'
@@ -22,10 +28,16 @@ sourceSets {
 }
 
 dependencies {
+    
+    // I think I'm going crazy with this... but there is some magic underneath and we cannot (_sometimes_ we can!)
+    // use local projects... so, these artifacts must be push to local maven first
 
-    implementation project(':prism4j')
+//    implementation project(':prism4j')
+    implementation "io.noties:prism4j:$version"
 
-    testAnnotationProcessor project(':prism4j-bundler')
+//    testAnnotationProcessor project(':prism4j-bundler')
+    testAnnotationProcessor "io.noties:prism4j-bundler:$version"
+    
     testImplementation JUNIT
     testImplementation COMMONS_IO
     testImplementation IX_JAVA
@@ -38,7 +50,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 afterEvaluate {
 
-    final def root = file('./build/src-gen/ru/noties/prism4j/languages')
+    final def root = file('./build/src-gen/io/noties/prism4j/languages')
     if (!root.exists()) {
         FileUtils.forceMkdir(root)
     } else {

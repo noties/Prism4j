@@ -1,10 +1,26 @@
+import ix.Ix
+import org.apache.commons.io.FileUtils
+
+import java.nio.charset.StandardCharsets
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath IX_JAVA
+        classpath COMMONS_IO
+    }
+}
+
 apply plugin: 'java-library'
 
 version = VERSION_NAME
 
 sourceSets {
     main.java.srcDirs += '../annotations'
-    main.resources.srcDirs += 'src/main/resources'
+//    main.resources.srcDirs += 'src/main/resources'
 }
 
 dependencies {
@@ -23,4 +39,8 @@ if (project.hasProperty('release')) {
         ext.SNAPSHOT_REPOSITORY_URL = LOCAL_MAVEN_URL
     }
     apply from: 'https://raw.githubusercontent.com/noties/gradle-mvn-push/master/gradle-mvn-push-jar.gradle'
+}
+
+afterEvaluate {
+    
 }

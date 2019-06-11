@@ -10,7 +10,7 @@ Core module `prism4j` is a lightweight module that comes with API (no language d
 [![prism4j](https://img.shields.io/maven-central/v/ru.noties/prism4j.svg?label=prism4j)](http://search.maven.org/#search|ga|1|g%3A%22ru.noties%22%20AND%20a%3A%22prism4j%22)
 
 ```groovy
-implementation 'ru.noties:prism4j:{latest_version}'
+implementation io
 ```
 
 ```java
@@ -94,7 +94,7 @@ called `prism4j-bundler` that will automatically add requested languages.
 [![prism4j-bundler](https://img.shields.io/maven-central/v/ru.noties/prism4j-bundler.svg?label=prism4j-bundler)](http://search.maven.org/#search|ga|1|g%3A%22ru.noties%22%20AND%20a%3A%22prism4j-bundler%22)
 
 ```groovy
-annotationProcessor 'ru.noties:prism4j-bundler:{latest-version}'
+annotationProcessor 'io.noties:prism4j-bundler:{latest-version}'
 ```
 
 Please note that `bundler` can add languages that are _ported_ (see `./languages` folder for the list).
@@ -153,7 +153,7 @@ But before you begin please create an issue with `language-support` tag so other
 a language is being worked at. This issue will be also the great place to discuss things that
 could arise whilst in process.
 
-Language definitions are at the `/languages` folder (go down the `ru.noties.prism4j.languages`
+Language definitions are at the `/languages` folder (go down the `io.noties.prism4j.languages`
 package to find the files). A new file should follow simple naming convention:
 `Prism_{real_language_name}.java`. So, a definition for the `json` would be `Prism_json.java`.
 
@@ -213,7 +213,7 @@ As this project _wants_ to work on Android, your regex's patterns must have `}` 
 ## License
 
 ```
-  Copyright 2018 Dimitry Ivanov (mail@dimitryivanov.ru)
+  Copyright 2018 Dimitry Ivanov (mail@dimitryivanov.io)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.

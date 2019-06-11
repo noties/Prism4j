@@ -1,4 +1,4 @@
-package ru.noties.prism4j.languages;
+package io.noties.prism4j.languages;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,10 +9,10 @@ import org.junit.runners.Parameterized;
 
 import java.util.Collection;
 
-import ru.noties.prism4j.GrammarUtils;
-import ru.noties.prism4j.Prism4j;
-import ru.noties.prism4j.TestUtils;
-import ru.noties.prism4j.annotations.PrismBundle;
+import io.noties.prism4j.GrammarUtils;
+import io.noties.prism4j.Prism4j;
+import io.noties.prism4j.TestUtils;
+import io.noties.prism4j.annotations.PrismBundle;
 
 @RunWith(Parameterized.class)
 @PrismBundle(include = {{include}}, grammarLocatorClassName = ".{{grammar-locator}}")

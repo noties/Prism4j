@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ru.noties.prism4j.GrammarLocator;
-import ru.noties.prism4j.Prism4j;
+import io.noties.prism4j.GrammarLocator;
+import io.noties.prism4j.Prism4j;
 
 {{imports}}
 
