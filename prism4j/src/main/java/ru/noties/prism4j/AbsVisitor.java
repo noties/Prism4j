@@ -1,13 +1,13 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public abstract class AbsVisitor implements Prism4j.Visitor {
 
     @Override
-    public void visit(@NonNull List<? extends Prism4j.Node> nodes) {
+    public void visit(@NotNull List<? extends Prism4j.Node> nodes) {
         for (Prism4j.Node node : nodes) {
             if (node.isSyntax()) {
                 visitSyntax((Prism4j.Syntax) node);
@@ -17,8 +17,8 @@ public abstract class AbsVisitor implements Prism4j.Visitor {
         }
     }
 
-    protected abstract void visitText(@NonNull Prism4j.Text text);
+    protected abstract void visitText(@NotNull Prism4j.Text text);
 
     // do not forget to call visit(syntax.children()) inside
-    protected abstract void visitSyntax(@NonNull Prism4j.Syntax syntax);
+    protected abstract void visitSyntax(@NotNull Prism4j.Syntax syntax);
 }

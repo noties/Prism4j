@@ -1,6 +1,6 @@
 package ru.noties.prism4j.bundler;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -15,10 +15,10 @@ import java.util.jar.JarFile;
 
 abstract class ListResources {
 
-    @NonNull
-    abstract List<String> listResourceFiles(@NonNull Class<?> type, @NonNull String folder);
+    @NotNull
+    abstract List<String> listResourceFiles(@NotNull Class<?> type, @NotNull String folder);
 
-    @NonNull
+    @NotNull
     static ListResources create() {
         return new Impl();
     }
@@ -26,9 +26,9 @@ abstract class ListResources {
     static class Impl extends ListResources {
 
         // thanks to http://www.uofr.net/~greg/java/get-resource-listing.html
-        @NonNull
+        @NotNull
         @Override
-        List<String> listResourceFiles(@NonNull Class<?> type, @NonNull String folder) {
+        List<String> listResourceFiles(@NotNull Class<?> type, @NotNull String folder) {
 
             URL url = type.getClassLoader().getResource(folder);
 

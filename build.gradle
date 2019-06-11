@@ -1,31 +1,29 @@
 buildscript {
     repositories {
         jcenter()
-        google()
     }
 }
 
 allprojects {
     repositories {
         jcenter()
-        google()
     }
     group = GROUP
+    version = VERSION_NAME
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion '4.8.1'
+wrapper {
+    gradleVersion '5.4.1'
     distributionType 'all'
 }
 
 ext {
 
-    final def supportVersion = '27.1.1'
-    SUPPORT_ANNOTATIONS = "com.android.support:support-annotations:$supportVersion"
+    ANNOTATIONS = 'org.jetbrains:annotations-java5:17.0.0'
 
     IX_JAVA = 'com.github.akarnokd:ixjava:1.0.0'
     COMMONS_IO = 'commons-io:commons-io:2.6'

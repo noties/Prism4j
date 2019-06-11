@@ -1,7 +1,7 @@
 package ru.noties.prism4j.bundler;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,16 @@ import java.util.List;
 public abstract class AnnotationsInformation {
 
     @Nullable
-    public abstract String findExtendInformation(@NonNull String source);
+    public abstract String findExtendInformation(@NotNull String source);
 
     @Nullable
-    public abstract List<String> findAliasesInformation(@NonNull String source);
+    public abstract List<String> findAliasesInformation(@NotNull String source);
 
     @Nullable
-    public abstract List<String> findModifyInformation(@NonNull String source);
+    public abstract List<String> findModifyInformation(@NotNull String source);
 
 
-    @NonNull
+    @NotNull
     public static AnnotationsInformation create() {
         return new Impl();
     }
@@ -27,7 +27,7 @@ public abstract class AnnotationsInformation {
 
         @Nullable
         @Override
-        public String findExtendInformation(@NonNull String source) {
+        public String findExtendInformation(@NotNull String source) {
 
             final String annotation = "@Extend";
             final int index = source.indexOf(annotation);
@@ -72,18 +72,18 @@ public abstract class AnnotationsInformation {
 
         @Nullable
         @Override
-        public List<String> findAliasesInformation(@NonNull String source) {
+        public List<String> findAliasesInformation(@NotNull String source) {
             return findAnnotationArrayInformation("@Aliases", source);
         }
 
         @Nullable
         @Override
-        public List<String> findModifyInformation(@NonNull String source) {
+        public List<String> findModifyInformation(@NotNull String source) {
             return findAnnotationArrayInformation("@Modify", source);
         }
 
         @Nullable
-        private static List<String> findAnnotationArrayInformation(@NonNull String annotation, @NonNull String source) {
+        private static List<String> findAnnotationArrayInformation(@NotNull String annotation, @NotNull String source) {
 
             final int start = source.indexOf(annotation);
             if (start < 0) {

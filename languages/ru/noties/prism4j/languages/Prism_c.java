@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
@@ -17,15 +17,15 @@ import static ru.noties.prism4j.Prism4j.token;
 @Extend("clike")
 public class Prism_c {
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
 
     final Prism4j.Grammar c = GrammarUtils.extend(
       GrammarUtils.require(prism4j, "clike"),
       "c",
       new GrammarUtils.TokenFilter() {
         @Override
-        public boolean test(@NonNull Prism4j.Token token) {
+        public boolean test(@NotNull Prism4j.Token token) {
           final String name = token.name();
           return !"class-name".equals(name) && !"boolean".equals(name);
         }

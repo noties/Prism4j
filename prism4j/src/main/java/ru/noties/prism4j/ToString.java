@@ -1,28 +1,29 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
 abstract class ToString {
 
-    @NonNull
-    static String toString(@NonNull Prism4j.Grammar grammar) {
+    @NotNull
+    static String toString(@NotNull Prism4j.Grammar grammar) {
         final StringBuilder builder = new StringBuilder();
         toString(builder, new CacheImpl(), grammar);
         return builder.toString();
     }
 
-    @NonNull
-    static String toString(@NonNull Prism4j.Token token) {
+    @NotNull
+    static String toString(@NotNull Prism4j.Token token) {
         final StringBuilder builder = new StringBuilder();
         toString(builder, new CacheImpl(), token);
         return builder.toString();
     }
 
-    @NonNull
-    static String toString(@NonNull Prism4j.Pattern pattern) {
+    @NotNull
+    static String toString(@NotNull Prism4j.Pattern pattern) {
         final StringBuilder builder = new StringBuilder();
         toString(builder, new CacheImpl(), pattern);
         return builder.toString();
@@ -33,12 +34,12 @@ abstract class ToString {
 
     private interface Cache {
 
-        boolean visited(@NonNull Object o);
+        boolean visited(@NotNull Object o);
 
-        void markVisited(@NonNull Object o);
+        void markVisited(@NotNull Object o);
     }
 
-    private static void toString(@NonNull StringBuilder builder, @NonNull Cache cache, @NonNull Prism4j.Grammar grammar) {
+    private static void toString(@NotNull StringBuilder builder, @NotNull Cache cache, @NotNull Prism4j.Grammar grammar) {
 
         builder
                 .append("Grammar{id=0x")
@@ -67,7 +68,7 @@ abstract class ToString {
         builder.append('}');
     }
 
-    private static void toString(@NonNull StringBuilder builder, @NonNull Cache cache, @NonNull Prism4j.Token token) {
+    private static void toString(@NotNull StringBuilder builder, @NotNull Cache cache, @NotNull Prism4j.Token token) {
 
         builder
                 .append("Token{id=0x")
@@ -95,7 +96,7 @@ abstract class ToString {
         builder.append('}');
     }
 
-    private static void toString(@NonNull StringBuilder builder, @NonNull Cache cache, @NonNull Prism4j.Pattern pattern) {
+    private static void toString(@NotNull StringBuilder builder, @NotNull Cache cache, @NotNull Prism4j.Pattern pattern) {
 
         builder
                 .append("Pattern{id=0x")
@@ -136,17 +137,17 @@ abstract class ToString {
         private final Set<Integer> cache = new HashSet<>(3);
 
         @Override
-        public boolean visited(@NonNull Object o) {
+        public boolean visited(@NotNull Object o) {
             return cache.contains(key(o));
         }
 
         @Override
-        public void markVisited(@NonNull Object o) {
+        public void markVisited(@NotNull Object o) {
             cache.add(key(o));
         }
 
-        @NonNull
-        private static Integer key(@NonNull Object o) {
+        @NotNull
+        private static Integer key(@NotNull Object o) {
             return System.identityHashCode(o);
         }
     }

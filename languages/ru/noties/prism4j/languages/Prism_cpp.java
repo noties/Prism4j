@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
@@ -15,8 +15,8 @@ import static ru.noties.prism4j.Prism4j.token;
 @Extend("c")
 public class Prism_cpp {
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
 
     final Prism4j.Grammar cpp = GrammarUtils.extend(
       GrammarUtils.require(prism4j, "c"),

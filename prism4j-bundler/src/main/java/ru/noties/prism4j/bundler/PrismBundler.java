@@ -1,12 +1,11 @@
 package ru.noties.prism4j.bundler;
 
-import android.support.annotation.NonNull;
-
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.google.googlejavaformat.java.JavaFormatterOptions;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -123,8 +122,8 @@ public class PrismBundler extends AbstractProcessor {
     // we must return a set of languageInfos here (so we do not copy language more than once
     // thus allowing multiple grammarLocators)
 
-    @NonNull
-    private Set<LanguageInfo> process(@NonNull Element element) {
+    @NotNull
+    private Set<LanguageInfo> process(@NotNull Element element) {
 
         final PrismBundle bundle = element.getAnnotation(PrismBundle.class);
         if (bundle == null) {
@@ -172,8 +171,8 @@ public class PrismBundler extends AbstractProcessor {
         // so, to start we generate a map of languages to include
     }
 
-    @NonNull
-    private Map<String, LanguageInfo> prepareLanguages(@NonNull PrismBundle bundle) {
+    @NotNull
+    private Map<String, LanguageInfo> prepareLanguages(@NotNull PrismBundle bundle) {
 
         final Map<String, LanguageInfo> languages;
 
@@ -199,7 +198,7 @@ public class PrismBundler extends AbstractProcessor {
         return languages;
     }
 
-    @NonNull
+    @NotNull
     private List<String> allLanguages() {
 
         final List<String> list = listResources.listResourceFiles(PrismBundler.class, LANGUAGES_FOLDER);
@@ -215,7 +214,7 @@ public class PrismBundler extends AbstractProcessor {
                 .toList();
     }
 
-    private void writeLanguages(@NonNull Set<LanguageInfo> languages) {
+    private void writeLanguages(@NotNull Set<LanguageInfo> languages) {
         for (LanguageInfo info : languages) {
             Writer writer = null;
             try {
@@ -236,8 +235,8 @@ public class PrismBundler extends AbstractProcessor {
         }
     }
 
-    @NonNull
-    private List<String> processLanguageNames(@NonNull String[] names) {
+    @NotNull
+    private List<String> processLanguageNames(@NotNull String[] names) {
         return Ix.fromArray(names)
                 .filter(Objects::nonNull)
                 .filter(s -> s.length() > 0)
@@ -245,7 +244,7 @@ public class PrismBundler extends AbstractProcessor {
                 .toList();
     }
 
-    private void languageInfo(@NonNull Map<String, LanguageInfo> map, @NonNull String name) {
+    private void languageInfo(@NotNull Map<String, LanguageInfo> map, @NotNull String name) {
 
         if (map.containsKey(name)) {
             return;
@@ -272,12 +271,12 @@ public class PrismBundler extends AbstractProcessor {
         }
     }
 
-    @NonNull
-    private static String languageSourceFileName(@NonNull String name) {
+    @NotNull
+    private static String languageSourceFileName(@NotNull String name) {
         return String.format(Locale.US, LANGUAGE_SOURCE_PATTERN, javaValidName(name));
     }
 
-    @NonNull
+    @NotNull
     private static String grammarLocatorTemplate() {
         try {
             return IOUtils.resourceToString("/GrammarLocator.template.java", StandardCharsets.UTF_8);
@@ -286,8 +285,8 @@ public class PrismBundler extends AbstractProcessor {
         }
     }
 
-    @NonNull
-    private ClassInfo classInfo(@NonNull Element element, @NonNull String name) {
+    @NotNull
+    private ClassInfo classInfo(@NotNull Element element, @NotNull String name) {
 
         final String packageName;
         final String className;
@@ -313,11 +312,11 @@ public class PrismBundler extends AbstractProcessor {
         return new ClassInfo(packageName, className);
     }
 
-    @NonNull
+    @NotNull
     private static String grammarLocatorSource(
-            @NonNull String template,
-            @NonNull ClassInfo classInfo,
-            @NonNull Map<String, LanguageInfo> languages) {
+            @NotNull String template,
+            @NotNull ClassInfo classInfo,
+            @NotNull Map<String, LanguageInfo> languages) {
         final StringBuilder builder = new StringBuilder(template);
         replaceTemplate(builder, TEMPLATE_PACKAGE_NAME, classInfo.packageName);
         replaceTemplate(builder, TEMPLATE_IMPORTS, createImports(languages));
@@ -335,13 +334,13 @@ public class PrismBundler extends AbstractProcessor {
         }
     }
 
-    private static void replaceTemplate(@NonNull StringBuilder template, @NonNull String name, @NonNull String content) {
+    private static void replaceTemplate(@NotNull StringBuilder template, @NotNull String name, @NotNull String content) {
         final int index = template.indexOf(name);
         template.replace(index, index + name.length(), content);
     }
 
-    @NonNull
-    private static String createImports(@NonNull Map<String, LanguageInfo> languages) {
+    @NotNull
+    private static String createImports(@NotNull Map<String, LanguageInfo> languages) {
         final StringBuilder builder = new StringBuilder();
         Ix.from(languages.values())
                 .map(languageInfo -> languageInfo.name)
@@ -356,8 +355,8 @@ public class PrismBundler extends AbstractProcessor {
         return builder.toString();
     }
 
-    @NonNull
-    private static String createRealLanguageName(@NonNull Map<String, LanguageInfo> languages) {
+    @NotNull
+    private static String createRealLanguageName(@NotNull Map<String, LanguageInfo> languages) {
         final StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, LanguageInfo> entry : languages.entrySet()) {
             final List<String> aliases = entry.getValue().aliases;
@@ -390,8 +389,8 @@ public class PrismBundler extends AbstractProcessor {
         }
     }
 
-    @NonNull
-    private static String createObtainGrammar(@NonNull Map<String, LanguageInfo> languages) {
+    @NotNull
+    private static String createObtainGrammar(@NotNull Map<String, LanguageInfo> languages) {
         final StringBuilder builder = new StringBuilder();
         builder
                 .append("final Prism4j.Grammar grammar;\n")
@@ -409,8 +408,8 @@ public class PrismBundler extends AbstractProcessor {
         return builder.toString();
     }
 
-    @NonNull
-    private static String createTriggerModify(@NonNull Map<String, LanguageInfo> languages) {
+    @NotNull
+    private static String createTriggerModify(@NotNull Map<String, LanguageInfo> languages) {
 
         // so, create a map collection where each entry in `modify` is the key and languageInfo.name is value
         final Map<String, List<String>> map = new HashMap<>(3);
@@ -451,13 +450,13 @@ public class PrismBundler extends AbstractProcessor {
         return builder.toString();
     }
 
-    @NonNull
-    private static String javaValidName(@NonNull String name) {
+    @NotNull
+    private static String javaValidName(@NotNull String name) {
         return name.replaceAll("-", "_");
     }
 
-    @NonNull
-    private static String createLanguages(@NonNull Map<String, LanguageInfo> languages) {
+    @NotNull
+    private static String createLanguages(@NotNull Map<String, LanguageInfo> languages) {
 
         final StringBuilder builder = new StringBuilder();
         final List<String> list = new ArrayList<>(languages.keySet());

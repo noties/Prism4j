@@ -1,7 +1,7 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -13,12 +13,12 @@ import java.util.Set;
 public interface GrammarLocator {
 
     @Nullable
-    Prism4j.Grammar grammar(@NonNull Prism4j prism4j, @NonNull String language);
+    Prism4j.Grammar grammar(@NotNull Prism4j prism4j, @NotNull String language);
 
     /**
      * @return collection of languages included into this locator
      * @since 1.1.0
      */
-    @NonNull
+    @NotNull
     Set<String> languages();
 }

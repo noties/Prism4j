@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ import static ru.noties.prism4j.Prism4j.token;
 @Extend("clike")
 public class Prism_javascript {
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
 
     final Prism4j.Grammar js = GrammarUtils.extend(GrammarUtils.require(prism4j, "clike"), "javascript",
       token("keyword", pattern(compile("\\b(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)\\b"))),

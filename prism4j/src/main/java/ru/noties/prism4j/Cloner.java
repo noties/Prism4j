@@ -1,7 +1,7 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,16 +10,16 @@ import java.util.Map;
 
 abstract class Cloner {
 
-    @NonNull
-    abstract Prism4j.Grammar clone(@NonNull Prism4j.Grammar grammar);
+    @NotNull
+    abstract Prism4j.Grammar clone(@NotNull Prism4j.Grammar grammar);
 
-    @NonNull
-    abstract Prism4j.Token clone(@NonNull Prism4j.Token token);
+    @NotNull
+    abstract Prism4j.Token clone(@NotNull Prism4j.Token token);
 
-    @NonNull
-    abstract Prism4j.Pattern clone(@NonNull Prism4j.Pattern pattern);
+    @NotNull
+    abstract Prism4j.Pattern clone(@NotNull Prism4j.Pattern pattern);
 
-    @NonNull
+    @NotNull
     static Cloner create() {
         return new Impl();
     }
@@ -29,42 +29,42 @@ abstract class Cloner {
         interface Context {
 
             @Nullable
-            Prism4j.Grammar grammar(@NonNull Prism4j.Grammar origin);
+            Prism4j.Grammar grammar(@NotNull Prism4j.Grammar origin);
 
             @Nullable
-            Prism4j.Token token(@NonNull Prism4j.Token origin);
+            Prism4j.Token token(@NotNull Prism4j.Token origin);
 
             @Nullable
-            Prism4j.Pattern pattern(@NonNull Prism4j.Pattern origin);
+            Prism4j.Pattern pattern(@NotNull Prism4j.Pattern origin);
 
 
-            void save(@NonNull Prism4j.Grammar origin, @NonNull Prism4j.Grammar clone);
+            void save(@NotNull Prism4j.Grammar origin, @NotNull Prism4j.Grammar clone);
 
-            void save(@NonNull Prism4j.Token origin, @NonNull Prism4j.Token clone);
+            void save(@NotNull Prism4j.Token origin, @NotNull Prism4j.Token clone);
 
-            void save(@NonNull Prism4j.Pattern origin, @NonNull Prism4j.Pattern clone);
+            void save(@NotNull Prism4j.Pattern origin, @NotNull Prism4j.Pattern clone);
         }
 
-        @NonNull
+        @NotNull
         @Override
-        Prism4j.Grammar clone(@NonNull Prism4j.Grammar grammar) {
+        Prism4j.Grammar clone(@NotNull Prism4j.Grammar grammar) {
             return clone(new ContextImpl(), grammar);
         }
 
-        @NonNull
+        @NotNull
         @Override
-        Prism4j.Token clone(@NonNull Prism4j.Token token) {
+        Prism4j.Token clone(@NotNull Prism4j.Token token) {
             return clone(new ContextImpl(), token);
         }
 
-        @NonNull
+        @NotNull
         @Override
-        Prism4j.Pattern clone(@NonNull Prism4j.Pattern pattern) {
+        Prism4j.Pattern clone(@NotNull Prism4j.Pattern pattern) {
             return clone(new ContextImpl(), pattern);
         }
 
-        @NonNull
-        private Prism4j.Grammar clone(@NonNull Context context, @NonNull Prism4j.Grammar grammar) {
+        @NotNull
+        private Prism4j.Grammar clone(@NotNull Context context, @NotNull Prism4j.Grammar grammar) {
 
             Prism4j.Grammar clone = context.grammar(grammar);
             if (clone != null) {
@@ -84,8 +84,8 @@ abstract class Cloner {
             return clone;
         }
 
-        @NonNull
-        private Prism4j.Token clone(@NonNull Context context, @NonNull Prism4j.Token token) {
+        @NotNull
+        private Prism4j.Token clone(@NotNull Context context, @NotNull Prism4j.Token token) {
 
             Prism4j.Token clone = context.token(token);
             if (clone != null) {
@@ -105,8 +105,8 @@ abstract class Cloner {
             return clone;
         }
 
-        @NonNull
-        private Prism4j.Pattern clone(@NonNull Context context, @NonNull Prism4j.Pattern pattern) {
+        @NotNull
+        private Prism4j.Pattern clone(@NotNull Context context, @NotNull Prism4j.Pattern pattern) {
 
             Prism4j.Pattern clone = context.pattern(pattern);
             if (clone != null) {
@@ -134,38 +134,38 @@ abstract class Cloner {
 
             @Nullable
             @Override
-            public Prism4j.Grammar grammar(@NonNull Prism4j.Grammar origin) {
+            public Prism4j.Grammar grammar(@NotNull Prism4j.Grammar origin) {
                 return (Prism4j.Grammar) cache.get(key(origin));
             }
 
             @Nullable
             @Override
-            public Prism4j.Token token(@NonNull Prism4j.Token origin) {
+            public Prism4j.Token token(@NotNull Prism4j.Token origin) {
                 return (Prism4j.Token) cache.get(key(origin));
             }
 
             @Nullable
             @Override
-            public Prism4j.Pattern pattern(@NonNull Prism4j.Pattern origin) {
+            public Prism4j.Pattern pattern(@NotNull Prism4j.Pattern origin) {
                 return (Prism4j.Pattern) cache.get(key(origin));
             }
 
             @Override
-            public void save(@NonNull Prism4j.Grammar origin, @NonNull Prism4j.Grammar clone) {
+            public void save(@NotNull Prism4j.Grammar origin, @NotNull Prism4j.Grammar clone) {
                 cache.put(key(origin), clone);
             }
 
             @Override
-            public void save(@NonNull Prism4j.Token origin, @NonNull Prism4j.Token clone) {
+            public void save(@NotNull Prism4j.Token origin, @NotNull Prism4j.Token clone) {
                 cache.put(key(origin), clone);
             }
 
             @Override
-            public void save(@NonNull Prism4j.Pattern origin, @NonNull Prism4j.Pattern clone) {
+            public void save(@NotNull Prism4j.Pattern origin, @NotNull Prism4j.Pattern clone) {
                 cache.put(key(origin), clone);
             }
 
-            private static int key(@NonNull Object o) {
+            private static int key(@NotNull Object o) {
                 return System.identityHashCode(o);
             }
         }

@@ -1,11 +1,10 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +24,8 @@ public abstract class TestUtils {
 
     private static final Gson GSON = new Gson();
 
-    @NonNull
-    public static Collection<Object> testFiles(@NonNull String lang) {
+    @NotNull
+    public static Collection<Object> testFiles(@NotNull String lang) {
 
         final String folder = "languages/" + lang + "/";
 
@@ -57,15 +56,15 @@ public abstract class TestUtils {
         public final JsonArray simplifiedOutput;
         public final String description;
 
-        Case(@NonNull String input, @NonNull JsonArray simplifiedOutput, @NonNull String description) {
+        Case(@NotNull String input, @NotNull JsonArray simplifiedOutput, @NotNull String description) {
             this.input = input;
             this.simplifiedOutput = simplifiedOutput;
             this.description = description;
         }
     }
 
-    @NonNull
-    public static Case readCase(@NonNull String file) {
+    @NotNull
+    public static Case readCase(@NotNull String file) {
 
         final String raw;
         try {
@@ -91,7 +90,7 @@ public abstract class TestUtils {
         return new Case(input, simplifiedOutput, description);
     }
 
-    public static void assertCase(@NonNull Case c, @NonNull List<? extends Prism4j.Node> nodes) {
+    public static void assertCase(@NotNull Case c, @NotNull List<? extends Prism4j.Node> nodes) {
 
         final String expected = c.simplifiedOutput.toString();
         final String actual = simplify(nodes).toString();
@@ -107,8 +106,8 @@ public abstract class TestUtils {
         }
     }
 
-    @NonNull
-    private static JsonArray simplify(@NonNull List<? extends Prism4j.Node> nodes) {
+    @NotNull
+    private static JsonArray simplify(@NotNull List<? extends Prism4j.Node> nodes) {
         // root array
         final JsonArray array = new JsonArray();
         for (Prism4j.Node node : nodes) {

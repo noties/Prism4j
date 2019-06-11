@@ -1,12 +1,12 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class TextImpl implements Prism4j.Text {
 
     private final String literal;
 
-    public TextImpl(@NonNull String literal) {
+    public TextImpl(@NotNull String literal) {
         this.literal = literal;
     }
 
@@ -20,7 +20,7 @@ public class TextImpl implements Prism4j.Text {
         return false;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String literal() {
         return literal;

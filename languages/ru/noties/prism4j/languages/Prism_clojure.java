@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import ru.noties.prism4j.Prism4j;
 
@@ -13,8 +13,8 @@ import static ru.noties.prism4j.Prism4j.token;
 @SuppressWarnings("unused")
 public class Prism_clojure {
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
     return grammar("clojure",
       token("comment", pattern(compile(";+.*"))),
       token("string", pattern(compile("\"(?:\\\\.|[^\\\\\"\\r\\n])*\""))),

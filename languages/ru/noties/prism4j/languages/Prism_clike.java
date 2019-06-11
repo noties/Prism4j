@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
@@ -14,8 +14,8 @@ import static ru.noties.prism4j.Prism4j.token;
 @SuppressWarnings("unused")
 public abstract class Prism_clike {
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
     return grammar(
       "clike",
       token(

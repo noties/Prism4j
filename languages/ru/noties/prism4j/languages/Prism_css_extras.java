@@ -1,7 +1,7 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
@@ -18,7 +18,7 @@ import static ru.noties.prism4j.Prism4j.token;
 public class Prism_css_extras {
 
   @Nullable
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
 
     final Prism4j.Grammar css = prism4j.grammar("css");
 

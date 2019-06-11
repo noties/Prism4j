@@ -1,7 +1,7 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,26 +12,26 @@ public class Prism4j {
 
     public interface Grammar {
 
-        @NonNull
+        @NotNull
         String name();
 
         // should mention that returned array is mutable
-        @NonNull
+        @NotNull
         List<Token> tokens();
     }
 
     public interface Token {
 
-        @NonNull
+        @NotNull
         String name();
 
-        @NonNull
+        @NotNull
         List<Pattern> patterns();
     }
 
     public interface Pattern {
 
-        @NonNull
+        @NotNull
         java.util.regex.Pattern regex();
 
         boolean lookbehind();
@@ -69,22 +69,22 @@ public class Prism4j {
 
     public interface Text extends Node {
 
-        @NonNull
+        @NotNull
         String literal();
     }
 
     public interface Syntax extends Node {
 
-        @NonNull
+        @NotNull
         String type();
 
-        @NonNull
+        @NotNull
         List<? extends Node> children();
 
         @Nullable
         String alias();
 
-        @NonNull
+        @NotNull
         String matchedString();
 
         boolean greedy();
@@ -104,7 +104,7 @@ public class Prism4j {
      * @see AbsVisitor
      */
     public interface Visitor {
-        void visit(@NonNull List<? extends Node> nodes);
+        void visit(@NotNull List<? extends Node> nodes);
     }
 
     /**
@@ -114,56 +114,56 @@ public class Prism4j {
      * @param tokens a list of {@link Token}s
      * @return an instance of {@link Grammar}
      */
-    @NonNull
-    public static Grammar grammar(@NonNull String name, @NonNull List<Token> tokens) {
+    @NotNull
+    public static Grammar grammar(@NotNull String name, @NotNull List<Token> tokens) {
         return new GrammarImpl(name, tokens);
     }
 
-    @NonNull
-    public static Grammar grammar(@NonNull String name, Token... tokens) {
+    @NotNull
+    public static Grammar grammar(@NotNull String name, Token... tokens) {
         return new GrammarImpl(name, ArrayUtils.toList(tokens));
     }
 
-    @NonNull
-    public static Token token(@NonNull String name, @NonNull List<Pattern> patterns) {
+    @NotNull
+    public static Token token(@NotNull String name, @NotNull List<Pattern> patterns) {
         return new TokenImpl(name, patterns);
     }
 
-    @NonNull
-    public static Token token(@NonNull String name, Pattern... patterns) {
+    @NotNull
+    public static Token token(@NotNull String name, Pattern... patterns) {
         return new TokenImpl(name, ArrayUtils.toList(patterns));
     }
 
-    @NonNull
-    public static Pattern pattern(@NonNull java.util.regex.Pattern regex) {
+    @NotNull
+    public static Pattern pattern(@NotNull java.util.regex.Pattern regex) {
         return new PatternImpl(regex, false, false, null, null);
     }
 
-    @NonNull
-    public static Pattern pattern(@NonNull java.util.regex.Pattern regex, boolean lookbehind) {
+    @NotNull
+    public static Pattern pattern(@NotNull java.util.regex.Pattern regex, boolean lookbehind) {
         return new PatternImpl(regex, lookbehind, false, null, null);
     }
 
-    @NonNull
+    @NotNull
     public static Pattern pattern(
-            @NonNull java.util.regex.Pattern regex,
+            @NotNull java.util.regex.Pattern regex,
             boolean lookbehind,
             boolean greedy) {
         return new PatternImpl(regex, lookbehind, greedy, null, null);
     }
 
-    @NonNull
+    @NotNull
     public static Pattern pattern(
-            @NonNull java.util.regex.Pattern regex,
+            @NotNull java.util.regex.Pattern regex,
             boolean lookbehind,
             boolean greedy,
             @Nullable String alias) {
         return new PatternImpl(regex, lookbehind, greedy, alias, null);
     }
 
-    @NonNull
+    @NotNull
     public static Pattern pattern(
-            @NonNull java.util.regex.Pattern regex,
+            @NotNull java.util.regex.Pattern regex,
             boolean lookbehind,
             boolean greedy,
             @Nullable String alias,
@@ -174,12 +174,12 @@ public class Prism4j {
 
     private final GrammarLocator grammarLocator;
 
-    public Prism4j(@NonNull GrammarLocator grammarLocator) {
+    public Prism4j(@NotNull GrammarLocator grammarLocator) {
         this.grammarLocator = grammarLocator;
     }
 
-    @NonNull
-    public List<Node> tokenize(@NonNull String text, @NonNull Grammar grammar) {
+    @NotNull
+    public List<Node> tokenize(@NotNull String text, @NotNull Grammar grammar) {
         final List<Node> entries = new ArrayList<>(3);
         entries.add(new TextImpl(text));
         matchGrammar(text, entries, grammar, 0, 0, false, null);
@@ -187,14 +187,14 @@ public class Prism4j {
     }
 
     @Nullable
-    public Grammar grammar(@NonNull String name) {
+    public Grammar grammar(@NotNull String name) {
         return grammarLocator.grammar(this, name);
     }
 
     private void matchGrammar(
-            @NonNull String text,
-            @NonNull List<Node> entries,
-            @NonNull Grammar grammar,
+            @NotNull String text,
+            @NotNull List<Node> entries,
+            @NotNull Grammar grammar,
             int index,
             int startPosition,
             boolean oneShot,
@@ -353,11 +353,11 @@ public class Prism4j {
         }
     }
 
-    private static boolean isSyntaxNode(@NonNull Node node) {
+    private static boolean isSyntaxNode(@NotNull Node node) {
         return node.isSyntax();
     }
 
-    private static boolean isGreedyNode(@NonNull Node node) {
+    private static boolean isGreedyNode(@NotNull Node node) {
         return node.isSyntax() && ((Syntax) node).greedy();
     }
 }

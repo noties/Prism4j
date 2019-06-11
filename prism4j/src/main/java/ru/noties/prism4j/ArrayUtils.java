@@ -1,6 +1,6 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.List;
 abstract class ArrayUtils {
 
     @SafeVarargs
-    @NonNull
+    @NotNull
     static <T> List<T> toList(T... args) {
         final int length = args != null
                 ? args.length

@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import ru.noties.prism4j.annotations.PrismBundle;
 public class {{class-name}} {
 
     @Parameterized.Parameters(name = "{0}")
-    @NonNull
+    @NotNull
     public static Collection<Object> parameters() {
         return TestUtils.testFiles("{{folder-name}}");
     }
@@ -33,7 +33,7 @@ public class {{class-name}} {
 
     private String file;
 
-    public {{class-name}}(@NonNull String file) {
+    public {{class-name}}(@NotNull String file) {
         this.file = file;
     }
 

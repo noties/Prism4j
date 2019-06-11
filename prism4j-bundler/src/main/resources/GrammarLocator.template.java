@@ -1,9 +1,7 @@
 package {{package-name}};
 
-import android.support.annotation.NonNull;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,13 +18,13 @@ public class {{class-name}} implements GrammarLocator {
 
     @SuppressWarnings("ConstantConditions")
     private static final Prism4j.Grammar NULL = new Prism4j.Grammar() {
-        @NonNull
+        @NotNull
         @Override
         public String name() {
             return null;
         }
 
-        @NonNull
+        @NotNull
         @Override
         public List<Prism4j.Token> tokens() {
             return null;
@@ -37,7 +35,7 @@ public class {{class-name}} implements GrammarLocator {
 
     @Nullable
     @Override
-    public Prism4j.Grammar grammar(@NonNull Prism4j prism4j, @NonNull String language) {
+    public Prism4j.Grammar grammar(@NotNull Prism4j prism4j, @NotNull String language) {
 
         final String name = realLanguageName(language);
 
@@ -60,22 +58,22 @@ public class {{class-name}} implements GrammarLocator {
         return grammar;
     }
 
-    @NonNull
-    protected String realLanguageName(@NonNull String name) {
+    @NotNull
+    protected String realLanguageName(@NotNull String name) {
         {{real-language-name}}
     }
 
     @Nullable
-    protected Prism4j.Grammar obtainGrammar(@NonNull Prism4j prism4j, @NonNull String name) {
+    protected Prism4j.Grammar obtainGrammar(@NotNull Prism4j prism4j, @NotNull String name) {
         {{obtain-grammar}}
     }
 
-    protected void triggerModify(@NonNull Prism4j prism4j, @NonNull String name) {
+    protected void triggerModify(@NotNull Prism4j prism4j, @NotNull String name) {
         {{trigger-modify}}
     }
 
     @Override
-    @NonNull
+    @NotNull
     public Set<String> languages() {
         {{languages}}
     }

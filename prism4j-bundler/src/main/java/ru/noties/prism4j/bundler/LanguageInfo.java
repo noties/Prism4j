@@ -1,7 +1,8 @@
 package ru.noties.prism4j.bundler;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -14,11 +15,11 @@ public class LanguageInfo {
     public final String source;
 
     public LanguageInfo(
-            @NonNull String name,
+            @NotNull String name,
             @Nullable List<String> aliases,
             @Nullable String extend,
             @Nullable List<String> modify,
-            @NonNull String source
+            @NotNull String source
     ) {
         this.name = name;
         this.aliases = aliases;

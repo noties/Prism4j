@@ -1,7 +1,7 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PatternImpl implements Prism4j.Pattern {
 
@@ -12,7 +12,7 @@ public class PatternImpl implements Prism4j.Pattern {
     private final Prism4j.Grammar inside;
 
     public PatternImpl(
-            @NonNull java.util.regex.Pattern regex,
+            @NotNull java.util.regex.Pattern regex,
             boolean lookbehind,
             boolean greedy,
             @Nullable String alias,
@@ -24,7 +24,7 @@ public class PatternImpl implements Prism4j.Pattern {
         this.inside = inside;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public java.util.regex.Pattern regex() {
         return regex;

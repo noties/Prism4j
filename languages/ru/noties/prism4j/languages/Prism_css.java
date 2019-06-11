@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import ru.noties.prism4j.GrammarUtils;
 import ru.noties.prism4j.Prism4j;
@@ -20,8 +20,8 @@ public abstract class Prism_css {
   // before a language is requested (fro example css)
   // it won't be initialized (so we won't modify markup to highlight css) before it was requested...
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
 
     final Prism4j.Grammar grammar = grammar(
       "css",

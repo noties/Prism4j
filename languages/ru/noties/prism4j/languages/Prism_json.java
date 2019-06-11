@@ -1,6 +1,6 @@
 package ru.noties.prism4j.languages;
 
-import android.support.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import ru.noties.prism4j.Prism4j;
 import ru.noties.prism4j.annotations.Aliases;
@@ -15,8 +15,8 @@ import static ru.noties.prism4j.Prism4j.token;
 @Aliases("jsonp")
 public class Prism_json {
 
-  @NonNull
-  public static Prism4j.Grammar create(@NonNull Prism4j prism4j) {
+  @NotNull
+  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
     return grammar(
       "json",
       token("property", pattern(compile("\"(?:\\\\.|[^\\\\\"\\r\\n])*\"(?=\\s*:)", CASE_INSENSITIVE))),

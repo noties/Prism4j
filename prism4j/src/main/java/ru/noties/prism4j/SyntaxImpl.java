@@ -1,7 +1,7 @@
 package ru.noties.prism4j;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ public class SyntaxImpl implements Prism4j.Syntax {
     private final boolean tokenized;
 
     public SyntaxImpl(
-            @NonNull String type,
-            @NonNull List<? extends Prism4j.Node> children,
+            @NotNull String type,
+            @NotNull List<? extends Prism4j.Node> children,
             @Nullable String alias,
-            @NonNull String matchedString,
+            @NotNull String matchedString,
             boolean greedy,
             boolean tokenized) {
         this.type = type;
@@ -39,13 +39,13 @@ public class SyntaxImpl implements Prism4j.Syntax {
         return true;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String type() {
         return type;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public List<? extends Prism4j.Node> children() {
         return children;
@@ -57,7 +57,7 @@ public class SyntaxImpl implements Prism4j.Syntax {
         return alias;
     }
 
-    @NonNull
+    @NotNull
     @Override
     public String matchedString() {
         return matchedString;

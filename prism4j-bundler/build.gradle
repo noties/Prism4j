@@ -8,7 +8,7 @@ sourceSets {
 }
 
 dependencies {
-    implementation SUPPORT_ANNOTATIONS
+    implementation ANNOTATIONS
     implementation IX_JAVA
     implementation COMMONS_IO
     implementation GOOGLE_JAVA_FORMAT
@@ -20,6 +20,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 if (project.hasProperty('release')) {
     if (project.hasProperty('local')) {
         ext.RELEASE_REPOSITORY_URL = LOCAL_MAVEN_URL
+        ext.SNAPSHOT_REPOSITORY_URL = LOCAL_MAVEN_URL
     }
     apply from: 'https://raw.githubusercontent.com/noties/gradle-mvn-push/master/gradle-mvn-push-jar.gradle'
 }
