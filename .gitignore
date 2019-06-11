@@ -7,3 +7,7 @@
 /captures
 .externalNativeBuild
 *.log
+
+# what are those?
+prism4j-bundler/out
+prism4j-languages/out
