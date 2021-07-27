@@ -1,4 +1,5 @@
 apply plugin: 'java-library'
+apply plugin: 'maven-publish'
 
 version = VERSION_NAME
 
@@ -19,4 +20,16 @@ if (project.hasProperty('release')) {
         ext.SNAPSHOT_REPOSITORY_URL = LOCAL_MAVEN_URL
     }
     apply from: 'https://raw.githubusercontent.com/noties/gradle-mvn-push/master/gradle-mvn-push-jar.gradle'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            def libraryFile = file("build/libs/prism4j-${version}.jar")
+            groupId "io.noties"
+            artifactId 'prism4j'
+            version version
+            artifact libraryFile
+        }
+    }
 }
